@@ -1,0 +1,7 @@
+name=Horned shield
+price=12
+equipmentSlot=WEAPON
+health=5.0
+armor=7.0
+damage=3.0
+speed=-1.0

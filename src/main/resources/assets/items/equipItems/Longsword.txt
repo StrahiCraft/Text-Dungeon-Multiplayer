@@ -1,0 +1,7 @@
+name=Longsword
+price=15
+equipmentSlot=WEAPON
+health=0.0
+armor=3.0
+damage=6.0
+speed=-2.0

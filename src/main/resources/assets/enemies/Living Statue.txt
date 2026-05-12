@@ -1,0 +1,6 @@
+name=Living Statue
+threatLevel=0.6
+health=10.0
+armor=10.0
+damage=1.5
+speed=0.5

@@ -1,0 +1,7 @@
+name=Trident
+price=17
+equipmentSlot=WEAPON
+health=0.0
+armor=0.0
+damage=5.0
+speed=5.0

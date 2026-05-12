@@ -1,0 +1,7 @@
+name=Shortsword
+price=10
+equipmentSlot=WEAPON
+health=0.0
+armor=0.0
+damage=2.5
+speed=4.0

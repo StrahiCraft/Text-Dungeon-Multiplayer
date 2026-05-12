@@ -1,0 +1,8 @@
+name=[33mTemporary [0mturtle potion
+price=100
+currentHealth=0.0
+currentSpeed=0.0
+health=0.0
+armor=40.0
+damage=0.0
+speed=0.0

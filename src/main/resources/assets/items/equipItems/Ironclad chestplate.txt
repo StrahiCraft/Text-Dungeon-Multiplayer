@@ -1,0 +1,7 @@
+name=Ironclad chestplate
+price=50
+equipmentSlot=BODY
+health=25.0
+armor=15.0
+damage=0.0
+speed=-8.0

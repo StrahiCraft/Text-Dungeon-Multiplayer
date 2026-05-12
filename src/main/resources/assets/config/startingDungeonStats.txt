@@ -1,0 +1,7 @@
+maxRooms=20
+roomIncrease=5
+startingThreat=0.5
+threatMultiplier=1.25
+enemyRoomChance=0.3
+lootRoomChance=0.25
+shopChance=0.1

@@ -1,0 +1,7 @@
+name=Ironclad gauntlets
+price=40
+equipmentSlot=HANDS
+health=10.0
+armor=5.0
+damage=15.0
+speed=-3.0

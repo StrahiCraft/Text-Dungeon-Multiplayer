@@ -1,0 +1,7 @@
+name=Spiked gloves
+price=12
+equipmentSlot=HANDS
+health=3.0
+armor=2.0
+damage=5.0
+speed=0.0

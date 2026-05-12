@@ -1,0 +1,7 @@
+name=Wooden sword
+price=2
+equipmentSlot=WEAPON
+health=0.0
+armor=0.0
+damage=0.5
+speed=0.0

@@ -1,0 +1,3 @@
+name=Large bundle of[33m gold[0m
+price=-1
+goldMultiplier=5.0

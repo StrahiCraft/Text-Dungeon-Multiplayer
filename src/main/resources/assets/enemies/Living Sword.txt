@@ -1,0 +1,6 @@
+name=Living Sword
+threatLevel=1.3
+health=5.0
+armor=0.0
+damage=7.5
+speed=5.0

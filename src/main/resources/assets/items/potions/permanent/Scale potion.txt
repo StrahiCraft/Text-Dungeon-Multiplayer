@@ -1,0 +1,8 @@
+name=[33mScale potion[0m
+price=15
+currentHealth=0.0
+currentSpeed=0.0
+health=0.0
+armor=1.0
+damage=0.0
+speed=0.0

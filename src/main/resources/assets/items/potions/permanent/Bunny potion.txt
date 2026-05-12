@@ -1,0 +1,8 @@
+name=[32mBunny potion[0m
+price=20
+currentHealth=0.0
+currentSpeed=0.0
+health=0.0
+armor=0.0
+damage=0.0
+speed=1.0
