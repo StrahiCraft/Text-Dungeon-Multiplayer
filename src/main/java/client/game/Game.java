@@ -7,6 +7,7 @@ import client.inventory.item.ItemGenerator;
 import client.entity.player.Player;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
+import com.mysql.cj.protocol.x.Notice;
 import utility.Stats;
 import utility.file.FileReader;
 
@@ -15,14 +16,22 @@ import java.util.Scanner;
 public class Game {
     private static boolean gameRunning = true;
     private static Player champion;
+    private static boolean connectedToServer = false;
 
-    public static void startGame(){
-        Scanner input = new Scanner(System.in);
+    private static Scanner input;
+
+    public static void initializeGame(){
+        input = new Scanner(System.in);
         EnemyGenerator.generateEnemiesFromFiles();
         ItemGenerator.generateItemsFromFiles();
+    }
 
-        mainMenu(input);
-        input.close();
+    public static void startGameOffline(){
+
+    }
+
+    public static void startGameOnline(){
+
     }
 
     private static void mainMenu(Scanner input) {
@@ -103,5 +112,13 @@ public class Game {
 
     public static void setChampion(Player champion) {
         Game.champion = champion;
+    }
+
+    public static boolean isConnectedToServer() {
+        return connectedToServer;
+    }
+
+    public static void setConnectedToServer(boolean connectedToServer) {
+        Game.connectedToServer = connectedToServer;
     }
 }

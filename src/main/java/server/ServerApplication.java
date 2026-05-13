@@ -5,7 +5,6 @@ import server.database.DatabaseManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -33,51 +32,42 @@ public class ServerApplication {
             System.out.println("Connection to database failed!");
             return;
         }
-        ServerSocket serverSocket = null;
-        try {
-            serverSocket = new ServerSocket(PORT);
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            try {
 
-            System.out.println("Server started on port " + PORT);
+                System.out.println("Server started on port " + PORT);
 
-            while (true){
-                Socket clientSocket = serverSocket.accept();
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
 
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                objectOutputStream.flush();
-                ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-
-                String clientConnectMessage = objectInputStream.readObject().toString();
-
-                if(clientConnectMessage != null){
-                    System.out.println(clientConnectMessage);
-                    UUID clientId = UUID.randomUUID();
-                    objectOutputStream.writeObject(clientId);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
                     objectOutputStream.flush();
+                    ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-                    ClientHandler clientHandler = new ClientHandler(clientSocket, clientId, objectInputStream, objectOutputStream);
-                    clientHandler.start();
+                    String clientConnectMessage = objectInputStream.readObject().toString();
 
-                    connectedClients.put(clientId, clientHandler);
+                    if (clientConnectMessage != null) {
+                        System.out.println(clientConnectMessage);
+                        UUID clientId = UUID.randomUUID();
+                        objectOutputStream.writeObject(clientId);
+                        objectOutputStream.flush();
 
-                    System.out.println("Client connected! with ID: " + clientId);
+                        ClientHandler clientHandler = new ClientHandler(clientSocket, clientId, objectInputStream, objectOutputStream);
+                        clientHandler.start();
+
+                        connectedClients.put(clientId, clientHandler);
+
+                        System.out.println("Client connected! with ID: " + clientId);
+                    } else {
+                        System.out.println("Client failed to connect.");
+                    }
                 }
-                else{
-                    System.out.println("Client failed to connect.");
-                }
-            }
-        }
-        catch (Exception e){
-            System.err.println(e.getMessage());
-        }
-        finally {
-            try{
-                if(serverSocket != null){
-                    serverSocket.close();
-                }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        } finally {
 
             DatabaseManager.disconnect();
         }

@@ -1,0 +1,145 @@
+package client.game;
+
+import client.graphics.Color;
+import client.graphics.TextRenderer;
+import client_server_communication.ServerMessage;
+import client_server_communication.ServerMessageType;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.UUID;
+
+public class Client extends Thread {
+    /**
+     * Socket used to connect to the server
+     */
+    private Socket socket;
+
+    /**
+     * IP address of the client (currently set to localhost)
+     */
+    private final String IP = "127.0.0.1";
+    /**
+     * Port of the server the client will connect to
+     */
+    private final int PORT = 25655;
+
+    /**
+     * The unique id every client is given by the server upon connecting
+     */
+    private UUID clientId;
+
+    /**
+     * Name of the player connecting to the server through this client
+     */
+    private String playerUsername;
+    /**
+     * Password of the player connecting to the server through this client
+     */
+    private String playerPassword;
+
+    /**
+     * Output stream for sending objects to the server
+     */
+    private ObjectOutputStream objectOutputStream;
+    /**
+     * Input stream for receiving objects from the server
+     */
+    private ObjectInputStream objectInputStream;
+
+    public Client() {
+        try{
+            socket = new Socket(IP, PORT);
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectOutputStream.flush();
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
+        }
+        catch (Exception e){
+            TextRenderer.printText(Color.getColor("red") + "Server not found...");
+        }
+    }
+
+    /**
+     * This is called when first trying to connect to the server, if the connection is successful, the game scene
+     * will be switched to the log in scene, if the connection fails, the scene remains as the connection failed scene
+     */
+    public void attemptConnectionToServer(){
+        try{
+            objectOutputStream.writeObject("Trying to connect client");
+
+            clientId = (UUID) objectInputStream.readObject();
+            Game.setConnectedToServer(true);
+            TextRenderer.printText(Color.getColor("green") + "Connected to the server!");
+        }
+        catch (Exception e){
+            TextRenderer.printText(Color.getColor("red") + "Connection to server failed...");
+            Game.setConnectedToServer(false);
+            Game.initializeGame();
+            interrupt();
+        }
+    }
+
+    /**
+     * Sends a message to the server with no additional data
+     * @param messageType Type of message being sent to the server
+     */
+    public void sendMessage(ServerMessageType messageType){
+        sendMessage(messageType, null);
+    }
+
+    /**
+     * Sends a message to the server with additional data in the form of an Object
+     * @param messageType Type of message being sent to the server
+     * @param data Data sent to the server
+     */
+    public void sendMessage(ServerMessageType messageType, Object data){
+        try{
+            objectOutputStream.writeObject(new ServerMessage(clientId, messageType, data));
+            objectOutputStream.reset();
+            objectOutputStream.flush();
+        }
+        catch (Exception e){
+            System.out.println("Connection to server failed, no message was sent.");
+        }
+    }
+
+    /**
+     * Runs all client side client-server logic after successful connection to the server
+     */
+    @Override
+    public void run() {
+        try {
+            attemptConnectionToServer();
+
+            while (!Thread.currentThread().isInterrupted()){
+                if(objectInputStream == null){
+                    continue;
+                }
+
+                ServerMessage receivedMessage = (ServerMessage) objectInputStream.readObject();
+
+                if(receivedMessage == null){
+                    continue;
+                }
+
+                switch (receivedMessage.getMessageType()){
+                    default:
+                        break;
+                }
+            }
+
+            if(objectOutputStream != null){
+                objectOutputStream.close();
+            }
+            if(objectInputStream != null){
+                objectInputStream.close();
+            }
+        }
+        catch (EOFException e){
+            System.out.println("End of socket data, disconnected.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
