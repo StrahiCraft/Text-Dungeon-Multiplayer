@@ -82,6 +82,7 @@ public class Client extends Thread {
 
     public void disconnect() {
         sendMessage(ServerMessageType.DISCONNECT);
+        Game.setConnectedToServer(false);
         interrupt();
     }
 
@@ -142,7 +143,9 @@ public class Client extends Thread {
             }
         }
         catch (EOFException e){
-            System.out.println("End of socket data, disconnected.");
+            TextRenderer.skipLine();
+            TextRenderer.printText(Color.getColor("red") + "Disconnecting from the server...");
+            TextRenderer.skipLine();
         }
         catch (Exception e){
             e.printStackTrace();

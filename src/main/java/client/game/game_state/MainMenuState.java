@@ -27,6 +27,7 @@ public class MainMenuState extends GameState {
             if(command.equalsIgnoreCase("reconnect")){
                 TextRenderer.printText(Color.getColor("yellow") + "Attempting to reconnect to the server...");
                 ClientApplication.connectToServer();
+                Game.changeState(new DefaultGameState());
             }
         }
     }
