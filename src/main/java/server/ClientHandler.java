@@ -91,6 +91,8 @@ public class ClientHandler extends Thread {
 
                 switch (messageType) {
                     case DISCONNECT -> ServerApplication.onClientDisconnected(messageFromClient.getClientId());
+                    case REGISTER -> registerPlayer(messageFromClient);
+                    case LOGIN -> loginPlayer(messageFromClient);
                     default -> System.out.println("Unknown message type " + messageType);
                 }
             }
@@ -100,6 +102,26 @@ public class ClientHandler extends Thread {
         }
         catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void registerPlayer(ServerMessage message){
+        String[] registerData = (String[])message.getMessageData();
+        if(AccountValidation.validRegistration(registerData[0], registerData[1])){
+            sendMessage(ServerMessageType.REGISTER_SUCCESS);
+        }
+        else {
+            sendMessage(ServerMessageType.REGISTER_FAIL);
+        }
+    }
+
+    private void loginPlayer(ServerMessage message){
+        String[] loginData = (String[])message.getMessageData();
+        if(AccountValidation.validLogin(loginData[0], loginData[1])){
+            sendMessage(ServerMessageType.LOGIN_SUCCESS);
+        }
+        else {
+            sendMessage(ServerMessageType.LOGIN_FAIL);
         }
     }
 }

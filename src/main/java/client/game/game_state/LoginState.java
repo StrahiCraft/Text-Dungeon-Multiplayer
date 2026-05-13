@@ -4,6 +4,7 @@ import client.game.ClientApplication;
 import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
+import client_server_communication.ServerMessageType;
 
 import java.util.Scanner;
 
@@ -34,6 +35,23 @@ public class LoginState extends GameState {
                 ClientApplication.getClientInstance().disconnect();
                 TextRenderer.printText("Goodbye!");
                 Game.quitGame();
+            }
+        }
+        if(commandParameters.length == 3){
+            if(commandParameters[0].equalsIgnoreCase("register")){
+                String[] registerParameters = { commandParameters[1], commandParameters[2] };
+                ClientApplication.getClientInstance().sendMessage(ServerMessageType.REGISTER, registerParameters);
+
+                TextRenderer.printText(Color.getColor("yellow") + "Attempting to register account...");
+                Game.changeState(new DefaultGameState());
+                return;
+            }
+            if(commandParameters[0].equalsIgnoreCase("login")){
+                String[] loginParameters = { commandParameters[1], commandParameters[2] };
+                ClientApplication.getClientInstance().sendMessage(ServerMessageType.LOGIN, loginParameters);
+
+                TextRenderer.printText(Color.getColor("yellow") + "Attempting to log into account...");
+                Game.changeState(new DefaultGameState());
             }
         }
     }

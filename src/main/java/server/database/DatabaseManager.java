@@ -9,15 +9,15 @@ public class DatabaseManager {
     /**
      * Username of the account for the database
      */
-    private static final String username = "master";
+    private static final String username = "root";
     /**
      * Password of the account for the database
      */
-    private static final String password = "password";
+    private static final String password = "";
     /**
      * URL of the database
      */
-    private static final String url = "jdbc:mysql://localhost:3306/online_minesweeper";
+    private static final String url = "jdbc:mysql://localhost:3306/text_dungeon";
 
     /**
      * The established connection to the database

@@ -1,10 +1,13 @@
 package client.game;
 
+import client.game.game_state.LoginState;
+import client.game.game_state.MainMenuState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 import client_server_communication.ServerMessage;
 import client_server_communication.ServerMessageType;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.UUID;
@@ -33,10 +36,6 @@ public class Client extends Thread {
      * Name of the player connecting to the server through this client
      */
     private String playerUsername;
-    /**
-     * Password of the player connecting to the server through this client
-     */
-    private String playerPassword;
 
     /**
      * Output stream for sending objects to the server
@@ -130,8 +129,10 @@ public class Client extends Thread {
                 }
 
                 switch (receivedMessage.getMessageType()){
-                    default:
-                        break;
+                    case REGISTER_SUCCESS -> onRegister(true);
+                    case REGISTER_FAIL -> onRegister(false);
+                    case LOGIN_SUCCESS -> onLogin(true);
+                    case LOGIN_FAIL -> onLogin(false);
                 }
             }
 
@@ -150,5 +151,25 @@ public class Client extends Thread {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void onRegister(boolean success){
+        if(success){
+            TextRenderer.printText(Color.getColor("green") + "Account successfully registered!");
+            Game.changeState(new MainMenuState());
+            return;
+        }
+        TextRenderer.printText(Color.getColor("red") + "Registration failed, account already exists!");
+        Game.changeState(new LoginState());
+    }
+
+    private void onLogin(boolean success){
+        if(success){
+            TextRenderer.printText(Color.getColor("green") + "Login successful!");
+            Game.changeState(new MainMenuState());
+            return;
+        }
+        TextRenderer.printText(Color.getColor("red") + "Login failed, account details are incorrect!");
+        Game.changeState(new LoginState());
     }
 }
