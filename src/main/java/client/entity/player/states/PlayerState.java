@@ -2,6 +2,7 @@ package client.entity.player.states;
 
 import client.entity.player.Player;
 import client.game.Game;
+import client.game.game_state.MainMenuState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
@@ -47,7 +48,7 @@ public abstract class PlayerState {
                     Color.resetColor() + Player.Instance.getGold() + "\n" +
                     Player.Instance.getStats() + "\n" +
                     Player.Instance.getEquipment());
-            case "quit" -> Game.backToMainMenu();
+            case "quit" -> Game.changeState(new MainMenuState());
             default -> onRandomStuffInputted();
         }
     }

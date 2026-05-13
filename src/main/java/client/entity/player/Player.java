@@ -5,6 +5,7 @@ import client.dungeon.Dungeon;
 import client.dungeon.rooms.DungeonRoom;
 import client.entity.Entity;
 import client.exceptions.IllegalScoreIncreaseException;
+import client.game.game_state.MainMenuState;
 import client.inventory.Inventory;
 import client.inventory.item.equipment.Equipment;
 import client.entity.player.states.PlayerState;
@@ -56,7 +57,7 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
     public void handleDeath() {
         CombatManager.setInCombat(false);
         TextRenderer.printText(Color.getColor("red") + "GAME OVER" + Color.resetColor() + "\nYour score was: " + currentScore);
-        Game.setInGame(false);
+        Game.changeState(new MainMenuState());
     }
 
     public void getInput(Scanner input) {
