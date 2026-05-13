@@ -47,7 +47,7 @@ public abstract class PlayerState {
                     Color.resetColor() + Player.Instance.getGold() + "\n" +
                     Player.Instance.getStats() + "\n" +
                     Player.Instance.getEquipment());
-            case "quit" -> Game.quitGame();
+            case "quit" -> Game.backToMainMenu();
             default -> onRandomStuffInputted();
         }
     }

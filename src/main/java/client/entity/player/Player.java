@@ -56,7 +56,7 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
     public void handleDeath() {
         CombatManager.setInCombat(false);
         TextRenderer.printText(Color.getColor("red") + "GAME OVER" + Color.resetColor() + "\nYour score was: " + currentScore);
-        Game.setGameRunning(false);
+        Game.setInGame(false);
     }
 
     public void getInput(Scanner input) {

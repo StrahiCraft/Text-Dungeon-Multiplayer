@@ -4,6 +4,7 @@ public class ClientApplication {
     private static Client clientInstance;
 
     public static void main(String[] args) {
+        Game.initializeGame();
         connectToServer();
     }
 

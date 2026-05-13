@@ -89,7 +89,8 @@ public class ClientHandler extends Thread {
                 }
                 ServerMessageType messageType = messageFromClient.getMessageType();
 
-                switch (messageType){
+                switch (messageType) {
+                    case DISCONNECT -> ServerApplication.onClientDisconnected(messageFromClient.getClientId());
                     default -> System.out.println("Unknown message type " + messageType);
                 }
             }

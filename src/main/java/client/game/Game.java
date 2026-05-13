@@ -7,16 +7,17 @@ import client.inventory.item.ItemGenerator;
 import client.entity.player.Player;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
-import com.mysql.cj.protocol.x.Notice;
 import utility.Stats;
 import utility.file.FileReader;
 
 import java.util.Scanner;
 
-public class Game {
+public class Game implements Runnable {
     private static boolean gameRunning = true;
+    private static boolean inGame = true;
     private static Player champion;
     private static boolean connectedToServer = false;
+    private static boolean loggingIn = false;
 
     private static Scanner input;
 
@@ -26,28 +27,83 @@ public class Game {
         ItemGenerator.generateItemsFromFiles();
     }
 
-    public static void startGameOffline(){
+    public static void closeInput(){
+        input.close();
+    }
 
+    public static void startGameOffline() {
+        mainMenu();
     }
 
     public static void startGameOnline(){
-
+        login();
     }
 
-    private static void mainMenu(Scanner input) {
+    private static void login(){
+        loggingIn = true;
+        boolean goingOffline = false;
 
+        while (loggingIn){
+            TextRenderer.printText("Welcome to the login screen, type in " + Color.getColor("green") + "login" + Color.resetColor() +
+                    " <" + Color.getColor("yellow") + "username" + Color.resetColor() + "> <" + Color.getColor("yellow") +
+                    "password" + Color.resetColor() + "> to log in to your existing account.");
+
+            TextRenderer.printText("If you don't have an account, create one by typing in " + Color.getColor("blue") + "register" + Color.resetColor() +
+                    " <" + Color.getColor("yellow") + "username" + Color.resetColor() + "> <" + Color.getColor("yellow") +
+                    "password" + Color.resetColor() + ">");
+
+            TextRenderer.printText("If you wish to play offline, type in " + Color.getColor("yellow") + "offline");
+            TextRenderer.printText("Type in " + Color.getColor("red") + "quit" + Color.resetColor() + " to quit the game");
+
+            String command = input.nextLine();
+            String[] commandParameters = command.split(" ");
+
+            if(commandParameters.length == 1) {
+                if(commandParameters[0].equalsIgnoreCase("offline")){
+                    loggingIn = false;
+                    goingOffline = true;
+                    break;
+                }
+                if(commandParameters[0].equalsIgnoreCase("quit")){
+                    loggingIn = false;
+                    closeInput();
+                    ClientApplication.getClientInstance().disconnect();
+                    TextRenderer.printText("Goodbye!");
+                    quitGame();
+                    return;
+                }
+            }
+        }
+
+        if(goingOffline){
+            TextRenderer.printText(Color.getColor("yellow") + "Going offline...");
+            ClientApplication.getClientInstance().disconnect();
+            startGameOffline();
+        }
+    }
+
+    private static void mainMenu() {
         while (true) {
             renderMainMenu();
             String command = input.nextLine();
 
             if(command.equalsIgnoreCase("quit")) {
                 TextRenderer.printText("Goodbye!");
+                quitGame();
                 return;
             }
 
             if(command.equalsIgnoreCase("start")) {
-                gameRunning = true;
-                gameLoop(input);
+                inGame = true;
+                gameLoop();
+            }
+
+            if(!isConnectedToServer()){
+                if(command.equalsIgnoreCase("reconnect")){
+                    TextRenderer.printText(Color.getColor("yellow") + "Attempting to reconnect to the server...");
+                    ClientApplication.connectToServer();
+                    break;
+                }
             }
         }
     }
@@ -69,11 +125,14 @@ public class Game {
                     " with a" + Color.getColor("green") + " score " + Color.resetColor() + "of " + champion.getCurrentScore() + ".");
         }
 
-        TextRenderer.printText("\nType in " + Color.getColor("green") + "start" + Color.resetColor() + " to start the game." +
-                "\nType in " + Color.getColor("red") + "quit" + Color.resetColor() + " to quit game");
+        TextRenderer.printText("\nType in " + Color.getColor("green") + "start" + Color.resetColor() + " to start the game");
+        if(!isConnectedToServer()){
+            TextRenderer.printText("\nType in " + Color.getColor("blue") + "reconnect" + Color.resetColor() + " to attempt to reconnect to the server");
+        }
+        TextRenderer.printText("\nType in " + Color.getColor("red") + "quit" + Color.resetColor() + " to quit game");
     }
 
-    private static void gameLoop(Scanner input){
+    private static void gameLoop() {
         Player player = new Player();
         Stats playerStats = new Stats();
         playerStats.interpretFileData(FileReader.readFile("src/main/resources/assets/config/playerStats.txt"));
@@ -89,29 +148,21 @@ public class Game {
         Dungeon.resetDungeon();
         DungeonGenerator.generateDungeon();
 
-        while(gameRunning){
+        while(inGame){
             player.getInput(input);
         }
     }
 
     public static void quitGame(){
-        setGameRunning(false);
+        gameRunning = false;
     }
 
-    public static void setGameRunning(boolean gameRunning) {
-        Game.gameRunning = gameRunning;
+    public static void backToMainMenu(){
+        setInGame(false);
     }
 
-    public static boolean isGameRunning() {
-        return gameRunning;
-    }
-
-    public static Player getChampion() {
-        return champion;
-    }
-
-    public static void setChampion(Player champion) {
-        Game.champion = champion;
+    public static void setInGame(boolean inGame) {
+        Game.inGame = inGame;
     }
 
     public static boolean isConnectedToServer() {
@@ -120,5 +171,13 @@ public class Game {
 
     public static void setConnectedToServer(boolean connectedToServer) {
         Game.connectedToServer = connectedToServer;
+    }
+
+    @Override
+    public void run() {
+        initializeGame();
+        while (gameRunning){
+
+        }
     }
 }

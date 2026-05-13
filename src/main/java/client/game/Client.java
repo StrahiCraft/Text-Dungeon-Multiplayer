@@ -70,13 +70,19 @@ public class Client extends Thread {
             clientId = (UUID) objectInputStream.readObject();
             Game.setConnectedToServer(true);
             TextRenderer.printText(Color.getColor("green") + "Connected to the server!");
+            Game.startGameOnline();
         }
         catch (Exception e){
             TextRenderer.printText(Color.getColor("red") + "Connection to server failed...");
             Game.setConnectedToServer(false);
-            Game.initializeGame();
+            Game.startGameOffline();
             interrupt();
         }
+    }
+
+    public void disconnect() {
+        sendMessage(ServerMessageType.DISCONNECT);
+        interrupt();
     }
 
     /**
