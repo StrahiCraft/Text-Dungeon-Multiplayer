@@ -55,7 +55,9 @@ public class Game extends Thread {
         initializeGame();
         while (gameRunning){
             currentState.updateState(input);
+            System.out.print("");
         }
+        ClientApplication.getClientInstance().disconnect();
         closeInput();
     }
 }
