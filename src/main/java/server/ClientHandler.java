@@ -93,11 +93,14 @@ public class ClientHandler extends Thread {
                     case DISCONNECT -> ServerApplication.onClientDisconnected(messageFromClient.getClientId());
                     case REGISTER -> registerPlayer(messageFromClient);
                     case LOGIN -> loginPlayer(messageFromClient);
+                    case LOGOUT -> logPlayerOut(messageFromClient);
                     default -> System.out.println("Unknown message type " + messageType);
                 }
             }
             objectOutputStream.close();
-            objectInputStream.close();
+            if(objectInputStream  != null){
+                objectInputStream.close();
+            }
             clientSocket.close();
         }
         catch (Exception e){
@@ -108,7 +111,9 @@ public class ClientHandler extends Thread {
     private void registerPlayer(ServerMessage message){
         String[] registerData = (String[])message.getMessageData();
         if(AccountValidation.validRegistration(registerData[0], registerData[1])){
-            sendMessage(ServerMessageType.REGISTER_SUCCESS);
+            clientAccountUsername = registerData[0];
+            AccountValidation.setLoggedIn(registerData[0], true);
+            sendMessage(ServerMessageType.REGISTER_SUCCESS, registerData[0]);
         }
         else {
             sendMessage(ServerMessageType.REGISTER_FAIL);
@@ -118,10 +123,21 @@ public class ClientHandler extends Thread {
     private void loginPlayer(ServerMessage message){
         String[] loginData = (String[])message.getMessageData();
         if(AccountValidation.validLogin(loginData[0], loginData[1])){
-            sendMessage(ServerMessageType.LOGIN_SUCCESS);
+            if(AccountValidation.notAlreadyLoggedIn(loginData[0])){
+                clientAccountUsername = loginData[0];
+                AccountValidation.setLoggedIn(loginData[0], true);
+                sendMessage(ServerMessageType.LOGIN_SUCCESS, loginData[0]);
+                return;
+            }
+            sendMessage(ServerMessageType.LOGIN_FAIL_ALREADY_LOGGED_IN);
         }
         else {
             sendMessage(ServerMessageType.LOGIN_FAIL);
         }
+    }
+
+    private void logPlayerOut(ServerMessage messageData){
+        String playerName = messageData.getMessageData().toString();
+        AccountValidation.setLoggedIn(playerName, false);
     }
 }

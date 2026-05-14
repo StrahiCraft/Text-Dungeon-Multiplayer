@@ -7,7 +7,6 @@ import client.graphics.TextRenderer;
 import client_server_communication.ServerMessage;
 import client_server_communication.ServerMessageType;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.UUID;
@@ -79,7 +78,13 @@ public class Client extends Thread {
         }
     }
 
+    public void logOut(){
+        sendMessage(ServerMessageType.LOGOUT, playerUsername);
+        playerUsername = "";
+    }
+
     public void disconnect() {
+        logOut();
         sendMessage(ServerMessageType.DISCONNECT);
         Game.setConnectedToServer(false);
         interrupt();
@@ -129,10 +134,11 @@ public class Client extends Thread {
                 }
 
                 switch (receivedMessage.getMessageType()){
-                    case REGISTER_SUCCESS -> onRegister(true);
-                    case REGISTER_FAIL -> onRegister(false);
-                    case LOGIN_SUCCESS -> onLogin(true);
-                    case LOGIN_FAIL -> onLogin(false);
+                    case REGISTER_SUCCESS -> onRegister(true, receivedMessage);
+                    case REGISTER_FAIL -> onRegister(false, receivedMessage);
+                    case LOGIN_SUCCESS -> onLogin(true, receivedMessage);
+                    case LOGIN_FAIL -> onLogin(false, receivedMessage);
+                    case LOGIN_FAIL_ALREADY_LOGGED_IN -> onAlreadyLoggedIn();
                 }
             }
 
@@ -153,9 +159,10 @@ public class Client extends Thread {
         }
     }
 
-    private void onRegister(boolean success){
+    private void onRegister(boolean success, ServerMessage messageData){
         if(success){
             TextRenderer.printText(Color.getColor("green") + "Account successfully registered!");
+            playerUsername = messageData.getMessageData().toString();
             Game.changeState(new MainMenuState());
             return;
         }
@@ -163,13 +170,19 @@ public class Client extends Thread {
         Game.changeState(new LoginState());
     }
 
-    private void onLogin(boolean success){
+    private void onLogin(boolean success, ServerMessage messageData){
         if(success){
             TextRenderer.printText(Color.getColor("green") + "Login successful!");
+            playerUsername = messageData.getMessageData().toString();
             Game.changeState(new MainMenuState());
             return;
         }
         TextRenderer.printText(Color.getColor("red") + "Login failed, account details are incorrect!");
+        Game.changeState(new LoginState());
+    }
+
+    private void onAlreadyLoggedIn(){
+        TextRenderer.printText(Color.getColor("red") + "Login failed, account is already logged in!");
         Game.changeState(new LoginState());
     }
 }

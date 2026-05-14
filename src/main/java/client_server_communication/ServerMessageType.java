@@ -9,6 +9,8 @@ public enum ServerMessageType {
 
     LOGIN,
     LOGIN_FAIL,
+    LOGIN_FAIL_ALREADY_LOGGED_IN,
     LOGIN_SUCCESS,
+    LOGOUT,
 
 }
