@@ -185,4 +185,12 @@ public class Client extends Thread {
         TextRenderer.printText(Color.getColor("red") + "Login failed, account is already logged in!");
         Game.changeState(new LoginState());
     }
+
+    public String getPlayerUsername() {
+        return playerUsername;
+    }
+
+    public UUID getClientId() {
+        return clientId;
+    }
 }

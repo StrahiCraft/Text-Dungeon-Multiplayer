@@ -12,6 +12,7 @@ public class MainMenuState extends GameState {
     public void updateState(Scanner input) {
         renderMainMenu();
         String command = input.nextLine();
+        String[] commandParameters = command.split(" ");
 
         if(command.equalsIgnoreCase("quit")) {
             TextRenderer.printText("Goodbye!");
@@ -20,7 +21,12 @@ public class MainMenuState extends GameState {
         }
 
         if(command.equalsIgnoreCase("start")) {
-            Game.changeState(new PlayingGameState());
+            if(Game.isConnectedToServer()){
+                Game.changeState(new LobbyState(true));
+            }
+            else {
+                Game.changeState(new PlayingGameState());
+            }
             return;
         }
 
@@ -41,6 +47,12 @@ public class MainMenuState extends GameState {
                 Game.changeState(new DefaultGameState());
             }
         }
+
+        if(commandParameters.length == 2){
+            if(Game.isConnectedToServer() && command.equalsIgnoreCase("join")){
+                TextRenderer.printText(Color.getColor("yellow") + "Attempting to join lobby...");
+            }
+        }
     }
 
     private static void renderMainMenu() {
@@ -50,8 +62,10 @@ public class MainMenuState extends GameState {
         TextRenderer.printText("\nType in " + Color.getColor("green") + "start" + Color.resetColor() + " to start the game");
 
         if(Game.isConnectedToServer()){
+            TextRenderer.printText("Type in " + Color.getColor("bright blue") + "join" + Color.resetColor() + " <" + Color.getColor("bright yellow") +
+                    "lobby code" + Color.resetColor() + "> to join another player's game");
             TextRenderer.printText("\nType in " + Color.getColor("yellow") + " logout " + Color.resetColor() + " to log out of the current account");
-            TextRenderer.printText("\nType in " + Color.getColor("yellow") + " offline " + Color.resetColor() + " to enter offline mode");
+            TextRenderer.printText("Type in " + Color.getColor("yellow") + " offline " + Color.resetColor() + " to enter offline mode");
         }
 
         if(!Game.isConnectedToServer()){

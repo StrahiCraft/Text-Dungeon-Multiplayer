@@ -21,4 +21,6 @@ public class ClientApplication {
     public static Client getClientInstance() {
         return clientInstance;
     }
+
+
 }
