@@ -5,6 +5,7 @@ import client.entity.enemy.Enemy;
 import client.entity.enemy.EnemyGenerator;
 import client.entity.player.states.PlayerPreCombat;
 import client.entity.player.states.PlayerState;
+import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 import utility.Vector2Int;
@@ -54,7 +55,7 @@ public class EnemyRoom extends DungeonRoom {
     private void generateEnemies() {
         enemies = new ArrayList<Enemy>();
 
-        float remainingThreat = Dungeon.getCurrentDungeonThreat();
+        float remainingThreat = Game.getDungeon().getCurrentDungeonThreat();
 
         while(remainingThreat > 0) {
             Enemy generatedEnemy = EnemyGenerator.generateEnemy(remainingThreat);

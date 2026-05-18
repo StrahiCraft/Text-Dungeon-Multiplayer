@@ -1,11 +1,14 @@
 package server;
 
+import client_server_communication.LobbyData;
+import client_server_communication.LobbyJoinRequest;
 import client_server_communication.ServerMessage;
 import client_server_communication.ServerMessageType;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.UUID;
 
 /**
@@ -24,6 +27,8 @@ public class ClientHandler extends Thread {
      * Username of the currently logged in account on this client
      */
     private String clientAccountUsername;
+
+    private LobbyData lobbyData;
 
     /**
      * Output stream for sending objects to the client from the server
@@ -94,6 +99,12 @@ public class ClientHandler extends Thread {
                     case REGISTER -> registerPlayer(messageFromClient);
                     case LOGIN -> loginPlayer(messageFromClient);
                     case LOGOUT -> logPlayerOut(messageFromClient);
+
+                    case CREATE_LOBBY -> createLobby(messageFromClient);
+                    case JOIN -> joinGame(messageFromClient);
+                    case DISBAND_LOBBY -> disbandLobby(messageFromClient);
+                    case LOBBY_DISBANDED -> lobbyData = null;
+                    case LEAVE_LOBBY -> leaveLobby(messageFromClient);
                     default -> System.out.println("Unknown message type " + messageType);
                 }
             }
@@ -102,6 +113,10 @@ public class ClientHandler extends Thread {
                 objectInputStream.close();
             }
             clientSocket.close();
+        }
+        catch (SocketException e){
+            ServerApplication.onClientDisconnected(clientId);
+            logPlayerOut(clientAccountUsername);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -137,7 +152,59 @@ public class ClientHandler extends Thread {
     }
 
     private void logPlayerOut(ServerMessage messageData){
-        String playerName = messageData.getMessageData().toString();
+        logPlayerOut(messageData.getMessageData().toString());
+    }
+
+    private void logPlayerOut(String playerName){
         AccountValidation.setLoggedIn(playerName, false);
+    }
+
+    private void joinGame(ServerMessage messageData){
+        LobbyJoinRequest joinRequest = (LobbyJoinRequest) messageData.getMessageData();
+        LobbyData joiningLobby = ServerApplication.getClientHandler(joinRequest.getLobbyCode()).getLobbyData();
+
+        if(joiningLobby == null){
+            sendMessage(ServerMessageType.JOIN_FAIL);
+            return;
+        }
+        if(!joiningLobby.isJoinable()){
+            sendMessage(ServerMessageType.JOIN_FAIL);
+            return;
+        }
+        joiningLobby.addPlayer(clientId, clientAccountUsername);
+        lobbyData = joiningLobby;
+        sendMessage(ServerMessageType.JOIN_SUCCESS, lobbyData);
+
+        updateLobby(joiningLobby);
+    }
+
+    private void createLobby(ServerMessage messageData) {
+        lobbyData = (LobbyData) messageData.getMessageData();
+    }
+
+    private void updateLobby(LobbyData lobbyData){
+        for(UUID clientId : lobbyData.getPlayers().keySet()){
+            if(ServerApplication.getClientHandler(clientId) != null){
+                ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.UPDATE_LOBBY, lobbyData);
+            }
+        }
+    }
+
+    private void leaveLobby(ServerMessage messageData){
+        lobbyData = (LobbyData) messageData.getMessageData();
+        updateLobby(lobbyData);
+        lobbyData = null;
+    }
+
+    private void disbandLobby(ServerMessage messageData) {
+        lobbyData = (LobbyData) messageData.getMessageData();
+        for(UUID clientId : lobbyData.getPlayers().keySet()){
+            ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.LOBBY_DISBANDED);
+        }
+        lobbyData = null;
+    }
+
+    public LobbyData getLobbyData() {
+        return lobbyData;
     }
 }

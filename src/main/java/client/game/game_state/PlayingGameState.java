@@ -1,7 +1,5 @@
 package client.game.game_state;
 
-import client.dungeon.Dungeon;
-import client.dungeon.DungeonGenerator;
 import client.entity.player.Player;
 import client.game.ClientApplication;
 import client.game.Game;
@@ -35,8 +33,6 @@ public class PlayingGameState extends GameState{
         TextRenderer.printText("Entering " + Color.getColor("red") + "DUNGEON" +  Color.resetColor() + "...");
         TextRenderer.skipLine();
 
-        Dungeon.resetDungeon();
-        DungeonGenerator.generateDungeon();
         gameInitialized = true;
     }
 

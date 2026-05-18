@@ -4,6 +4,7 @@ import client.dungeon.Dungeon;
 import client.dungeon.rooms.EmptyRoom;
 import client.dungeon.rooms.LootRoom;
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
@@ -37,7 +38,7 @@ public class PlayerInLootRoom extends PlayerWandering{
         Player.Instance.getInventory().addItem(((LootRoom)Player.Instance.getCurrentRoom()).getLoot());
         Player.Instance.increaseScore(1);
 
-        Dungeon.setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
+        Game.getDungeon().setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
                 Player.Instance.getCurrentRoom().getPosition());
 
 

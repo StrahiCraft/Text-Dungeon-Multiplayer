@@ -65,7 +65,7 @@ public class Potion extends Item {
                 statIncreases.multiplyStats(5f);
                 setPrice((int)(getPrice() * 5f));
             }
-            case MITHIC -> {
+            case MYTHIC -> {
                 statIncreases.multiplyStats(10f);
                 setPrice((int)(getPrice() * 10f));
             }

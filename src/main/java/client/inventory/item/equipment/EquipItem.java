@@ -71,7 +71,7 @@ public class EquipItem extends Item {
                 statIncreases.multiplyStats(3f);
                 setPrice((int)((float)getPrice() * 3f));
             }
-            case MITHIC -> {
+            case MYTHIC -> {
                 statIncreases.multiplyStats(5f);
                 setPrice((int)((float)getPrice() * 5f));
             }

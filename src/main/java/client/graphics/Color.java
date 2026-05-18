@@ -44,7 +44,7 @@ public class Color {
             case RARE -> getColor("blue");
             case EPIC -> getColor("magenta");
             case LEGENDARY -> getColor("bright yellow");
-            case MITHIC -> getColor("bright red");
+            case MYTHIC -> getColor("bright red");
         };
     }
 }

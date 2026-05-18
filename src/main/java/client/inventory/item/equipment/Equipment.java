@@ -4,10 +4,11 @@ import client.entity.player.Player;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
+import java.io.Serializable;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-public class Equipment {
+public class Equipment implements Serializable {
     private Dictionary<EquipmentSlot, EquipItem> equippedItems;
 
     public Equipment() {

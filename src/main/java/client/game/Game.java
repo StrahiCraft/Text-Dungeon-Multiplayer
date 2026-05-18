@@ -1,5 +1,7 @@
 package client.game;
 
+import client.dungeon.Dungeon;
+import client.dungeon.DungeonGenerator;
 import client.entity.enemy.EnemyGenerator;
 import client.game.game_state.DefaultGameState;
 import client.game.game_state.GameState;
@@ -13,6 +15,8 @@ public class Game extends Thread {
     private static boolean gameRunning = true;
     private static boolean connectedToServer = false;
     private static GameState currentState = new DefaultGameState();
+
+    private static Dungeon offlineDungeon;
 
     private static Scanner input;
 
@@ -48,6 +52,20 @@ public class Game extends Thread {
 
     public static void changeState(GameState newState){
         currentState = newState;
+    }
+
+    public static Dungeon getDungeon(){
+        if(connectedToServer){
+            return  ClientApplication.getClientInstance().getLobbyData().getDungeonData();
+        }
+        return offlineDungeon;
+    }
+
+    public static void generateOfflineDungeon(){
+        if(!connectedToServer){
+            offlineDungeon = new Dungeon();
+            offlineDungeon = DungeonGenerator.generateDungeon();
+        }
     }
 
     @Override

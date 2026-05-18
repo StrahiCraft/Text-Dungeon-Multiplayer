@@ -3,6 +3,7 @@ package client.combat;
 import client.dungeon.Dungeon;
 import client.dungeon.rooms.EmptyRoom;
 import client.entity.enemy.Enemy;
+import client.game.Game;
 import client.inventory.item.equipment.EquipItem;
 import client.entity.player.Player;
 import client.graphics.Color;
@@ -31,7 +32,7 @@ public class CombatManager {
         Player.Instance.addGold(goldReward);
         Player.Instance.getStats().refillSpeed();
         clearTemporaryStats();
-        Dungeon.setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
+        Game.getDungeon().setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
                 Player.Instance.getCurrentRoom().getPosition());
     }
 
@@ -165,7 +166,7 @@ public class CombatManager {
 
     public static void setEnemies(ArrayList<Enemy> enemies) {
         CombatManager.enemies = enemies;
-        goldReward = (int)(Dungeon.getDungeonStats().getCurrentThreat() * enemies.size() * 5f);
+        goldReward = (int)(Game.getDungeon().getDungeonStats().getCurrentThreat() * enemies.size() * 5f);
     }
 
     public static boolean isInCombat() {

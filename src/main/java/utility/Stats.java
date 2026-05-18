@@ -5,9 +5,10 @@ import utility.file.FileInterpreter;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Stats implements utility.file.FileWriter, FileInterpreter {
+public class Stats implements utility.file.FileWriter, FileInterpreter, Serializable {
     private static final float MAX_ARMOR = 100;
 
     private float maxHealth;

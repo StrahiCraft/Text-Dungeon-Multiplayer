@@ -6,18 +6,23 @@ import client.dungeon.utility.DungeonStats;
 import client.entity.player.Player;
 import utility.Vector2Int;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Dungeon {
-    private static Dictionary<String, DungeonRoom> dungeonRooms = new Hashtable<>();
-    private static DungeonBounds dungeonBounds = new DungeonBounds();
-    private static DungeonStats dungeonStats = new DungeonStats();
+public class Dungeon implements Serializable {
+    private Dictionary<String, DungeonRoom> dungeonRooms = new Hashtable<>();
+    private DungeonBounds dungeonBounds = new DungeonBounds();
+    private DungeonStats dungeonStats = new DungeonStats();
 
-    public static void resetDungeon(){
+    public Dungeon() {
+        resetDungeon();
+    }
+
+    public void resetDungeon(){
         dungeonStats.resetDungeonStats();
     }
 
-    public static void setRoom(DungeonRoom newRoom, Vector2Int roomPosition){
+    public void setRoom(DungeonRoom newRoom, Vector2Int roomPosition){
         DungeonRoom oldRoom = dungeonRooms.get(roomPosition.toString());
 
         if(oldRoom.getNorthRoom() != null){
@@ -42,51 +47,52 @@ public class Dungeon {
 
         dungeonRooms.put(roomPosition.toString(), newRoom);
 
-        if(Player.Instance.getCurrentRoom().getPosition().equalValue(roomPosition)){
-            Player.Instance.setCurrentRoom(newRoom);
-        }
+        // TODO send some signal that a room was changed to change it for all the players
+//        if(Player.Instance.getCurrentRoom().getPosition().equalValue(roomPosition)){
+//            Player.Instance.setCurrentRoom(newRoom);
+//        }
     }
 
-    public static DungeonRoom getRandomRoom(){
+    public DungeonRoom getRandomRoom(){
         ArrayList<DungeonRoom> rooms = Collections.list(dungeonRooms.elements());
         rooms.remove(dungeonRooms.get(new Vector2Int().toString()));
 
         return rooms.get((int)(Math.random() * rooms.size()));
     }
 
-    public static DungeonRoom getStartingRoom(){
+    public DungeonRoom getStartingRoom(){
         return dungeonRooms.get("x=0, y=0");
     }
 
-    public static void progressFloor(){
+    public void progressFloor(){
         dungeonStats.progressFloor();
     }
 
-    public static float getCurrentDungeonThreat() {
+    public float getCurrentDungeonThreat() {
         return dungeonStats.getCurrentThreat();
     }
 
-    public static Dictionary<String, DungeonRoom> getDungeonRooms() {
+    public Dictionary<String, DungeonRoom> getDungeonRooms() {
         return dungeonRooms;
     }
 
-    public static DungeonBounds getDungeonBounds() {
+    public DungeonBounds getDungeonBounds() {
         return dungeonBounds;
     }
 
-    public static void setDungeonBounds(DungeonBounds dungeonBounds) {
-        Dungeon.dungeonBounds = dungeonBounds;
+    public void setDungeonBounds(DungeonBounds dungeonBounds) {
+        this.dungeonBounds = dungeonBounds;
     }
 
-    public static void setDungeonRooms(Dictionary<String, DungeonRoom> dungeonRooms) {
-        Dungeon.dungeonRooms = dungeonRooms;
+    public void setDungeonRooms(Dictionary<String, DungeonRoom> dungeonRooms) {
+        this.dungeonRooms = dungeonRooms;
     }
 
-    public static DungeonStats getDungeonStats() {
+    public DungeonStats getDungeonStats() {
         return dungeonStats;
     }
 
-    public static void setDungeonStats(DungeonStats dungeonStats) {
-        Dungeon.dungeonStats = dungeonStats;
+    public void setDungeonStats(DungeonStats dungeonStats) {
+        this.dungeonStats = dungeonStats;
     }
 }

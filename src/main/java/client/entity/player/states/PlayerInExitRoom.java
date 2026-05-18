@@ -2,6 +2,7 @@ package client.entity.player.states;
 
 import client.dungeon.Dungeon;
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class PlayerInExitRoom extends PlayerWandering{
             return false;
         }
 
-        Dungeon.progressFloor();
+        Game.getDungeon().progressFloor();
         Player.Instance.increaseScore(10);
         return true;
     }

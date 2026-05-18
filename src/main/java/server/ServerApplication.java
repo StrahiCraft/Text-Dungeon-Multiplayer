@@ -1,5 +1,6 @@
 package server;
 
+import client_server_communication.LobbyData;
 import server.database.DatabaseManager;
 
 import java.io.*;
@@ -22,6 +23,7 @@ public class ServerApplication {
      * using it as the key
      */
     private static HashMap<UUID, ClientHandler> connectedClients = new HashMap<>();
+    private static HashMap<UUID, LobbyData> lobbies = new HashMap<>();
 
     /**
      * Main function of the server, all client connection logic from the server side is done here
@@ -68,7 +70,6 @@ public class ServerApplication {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
-
             DatabaseManager.disconnect();
         }
     }

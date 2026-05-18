@@ -1,6 +1,8 @@
 package utility;
 
-public class Vector2Int {
+import java.io.Serializable;
+
+public class Vector2Int implements Serializable {
     private int x;
     private int y;
 

@@ -2,7 +2,9 @@ package client.entity;
 
 import utility.Stats;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Serializable {
     private String name;
     private Stats stats;
 

@@ -3,7 +3,9 @@ package client.dungeon.rooms;
 import client.entity.player.states.PlayerState;
 import utility.Vector2Int;
 
-public abstract class DungeonRoom {
+import java.io.Serializable;
+
+public abstract class DungeonRoom implements Serializable {
     private Vector2Int position;
 
     private char roomSymbol = '#';

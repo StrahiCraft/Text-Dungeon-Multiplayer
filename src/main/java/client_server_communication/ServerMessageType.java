@@ -13,4 +13,14 @@ public enum ServerMessageType {
     LOGIN_SUCCESS,
     LOGOUT,
 
+    JOIN,
+    JOIN_FAIL,
+    JOIN_SUCCESS,
+
+    CREATE_LOBBY,
+    UPDATE_LOBBY,
+
+    DISBAND_LOBBY,
+    LOBBY_DISBANDED,
+    LEAVE_LOBBY
 }

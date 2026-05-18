@@ -3,6 +3,7 @@ package client.entity.player.states;
 import client.dungeon.DungeonMapRenderer;
 import client.dungeon.rooms.DungeonRoom;
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 import utility.Vector2Int;
@@ -45,7 +46,7 @@ public class PlayerWandering extends PlayerState{
     public boolean checkInput(String inputText, Scanner input) {
         switch (inputText) {
             case "map" -> {
-                TextRenderer.printText(DungeonMapRenderer.renderDungeonMap());
+                TextRenderer.printText(DungeonMapRenderer.renderDungeonMap(Game.getDungeon()));
                 return true;
             }
             case "inventory" -> {

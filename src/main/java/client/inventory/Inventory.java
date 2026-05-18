@@ -5,9 +5,10 @@ import client.inventory.item.Rarity;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Inventory {
+public class Inventory implements Serializable {
     private int slotCount;
     private ArrayList<Item> items;
 

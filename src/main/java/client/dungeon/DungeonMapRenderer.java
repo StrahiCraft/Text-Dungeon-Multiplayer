@@ -11,8 +11,8 @@ import java.util.Collections;
 
 public class DungeonMapRenderer {
 
-    public static String renderDungeonMap(){
-        char[][] dungeonMap = fillDungeonMap();
+    public static String renderDungeonMap(Dungeon dungeon){
+        char[][] dungeonMap = fillDungeonMap(dungeon);
         StringBuilder mapString = new StringBuilder();
 
         for(int x = dungeonMap.length - 1; x > 0; x--){
@@ -43,8 +43,8 @@ public class DungeonMapRenderer {
         return Color.resetColor();
     }
 
-    private static char[][] fillDungeonMap(){
-        DungeonBounds dungeonBounds = Dungeon.getDungeonBounds();
+    private static char[][] fillDungeonMap(Dungeon dungeon){
+        DungeonBounds dungeonBounds = dungeon.getDungeonBounds();
 
         char[][]dungeonMap = new char[(dungeonBounds.getMaxDungeonCoordinate().getY() -
                 dungeonBounds.getMinDungeonCoordinate().getY() + 1) * 3]
@@ -55,7 +55,7 @@ public class DungeonMapRenderer {
             Arrays.fill(chars, ' ');
         }
 
-        for(DungeonRoom currentRoom : Collections.list(Dungeon.getDungeonRooms().elements())){
+        for(DungeonRoom currentRoom : Collections.list(dungeon.getDungeonRooms().elements())){
             fillDungeonRoom(currentRoom, dungeonMap, dungeonBounds);
         }
 

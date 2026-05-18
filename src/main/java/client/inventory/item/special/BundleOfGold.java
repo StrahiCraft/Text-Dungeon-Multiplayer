@@ -1,6 +1,6 @@
 package client.inventory.item.special;
 
-import client.dungeon.Dungeon;
+import client.game.Game;
 import client.inventory.item.Item;
 import client.inventory.item.Rarity;
 import client.entity.player.Player;
@@ -37,7 +37,7 @@ public class BundleOfGold extends Item {
 
     @Override
     public void onUse() {
-        int goldIncrease = (int)(Math.random() * 10 * Dungeon.getCurrentDungeonThreat() * goldMultiplier);
+        int goldIncrease = (int)(Math.random() * 10 * Game.getDungeon().getCurrentDungeonThreat() * goldMultiplier);
         Player.Instance.addGold(goldIncrease);
         Player.Instance.getInventory().removeItem(this);
 
@@ -53,7 +53,7 @@ public class BundleOfGold extends Item {
             case RARE ->      goldMultiplier *= 1.5f;
             case EPIC ->      goldMultiplier *= 1.75f;
             case LEGENDARY -> goldMultiplier *= 2f;
-            case MITHIC ->    goldMultiplier *= 3f;
+            case MYTHIC ->    goldMultiplier *= 3f;
         }
     }
 

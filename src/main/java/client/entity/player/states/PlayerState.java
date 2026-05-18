@@ -6,10 +6,11 @@ import client.game.game_state.MainMenuState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class PlayerState {
+public abstract class PlayerState implements Serializable {
     protected ArrayList<String> possibleCommands = new ArrayList<>();
     private String inputQuestion;
 

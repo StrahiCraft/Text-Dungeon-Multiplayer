@@ -3,7 +3,9 @@ package client.inventory.item;
 import client.graphics.Color;
 import utility.file.FileInterpreter;
 
-public abstract class Item implements utility.file.FileWriter, FileInterpreter {
+import java.io.Serializable;
+
+public abstract class Item implements utility.file.FileWriter, FileInterpreter, Serializable {
     private String name;
     private Rarity rarity;
     private int price;
@@ -55,7 +57,7 @@ public abstract class Item implements utility.file.FileWriter, FileInterpreter {
             return;
         }
         if(roll > 1.6125){
-            rarity = Rarity.MITHIC;
+            rarity = Rarity.MYTHIC;
             return;
         }
         rerollRarity();

@@ -1,9 +1,12 @@
 package client.game;
 
+import client.dungeon.DungeonGenerator;
+import client.game.game_state.LobbyState;
 import client.game.game_state.LoginState;
 import client.game.game_state.MainMenuState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
+import client_server_communication.LobbyData;
 import client_server_communication.ServerMessage;
 import client_server_communication.ServerMessageType;
 
@@ -35,6 +38,8 @@ public class Client extends Thread {
      * Name of the player connecting to the server through this client
      */
     private String playerUsername;
+
+    private LobbyData lobbyData;
 
     /**
      * Output stream for sending objects to the server
@@ -139,6 +144,10 @@ public class Client extends Thread {
                     case LOGIN_SUCCESS -> onLogin(true, receivedMessage);
                     case LOGIN_FAIL -> onLogin(false, receivedMessage);
                     case LOGIN_FAIL_ALREADY_LOGGED_IN -> onAlreadyLoggedIn();
+                    case JOIN_SUCCESS -> onJoin(true, receivedMessage);
+                    case JOIN_FAIL -> onJoin(false, receivedMessage);
+                    case UPDATE_LOBBY -> updateLobbyData(receivedMessage);
+                    case LOBBY_DISBANDED -> onLobbyDisbanded();
                 }
             }
 
@@ -186,11 +195,76 @@ public class Client extends Thread {
         Game.changeState(new LoginState());
     }
 
+    private void onJoin(boolean success, ServerMessage messageData){
+        if(success){
+            TextRenderer.printText(Color.getColor("green") + "Successfully joined the lobby!");
+            lobbyData = (LobbyData) messageData.getMessageData();
+            Game.changeState(new LobbyState(false));
+            return;
+        }
+        TextRenderer.printText(Color.getColor("red") + "Failed to join the lobby, returning to main menu...");
+        Game.changeState(new MainMenuState());
+    }
+
+    public void createLobbyData() {
+        lobbyData = new LobbyData(clientId, playerUsername);
+        lobbyData.setDungeonData(DungeonGenerator.generateDungeon());
+        sendMessage(ServerMessageType.CREATE_LOBBY, lobbyData);
+    }
+
+    private void onLobbyDisbanded(){
+        TextRenderer.printText(Color.getColor("red") + "Lobby has been disbanded, press enter to return to the menu...");
+        Game.changeState(new MainMenuState());
+        sendMessage(ServerMessageType.LOBBY_DISBANDED);
+        lobbyData = null;
+    }
+
+    private void updateLobbyData(ServerMessage messageData){
+        LobbyData newData = (LobbyData) messageData.getMessageData();
+        if(newData.isJoinable()){
+            checkForNewPlayers(newData);
+        }
+        checkForPlayersLeaving(newData);
+        lobbyData = newData;
+    }
+
+    private void checkForNewPlayers(LobbyData newLobbyData) {
+        if(newLobbyData.getPlayers().size() == lobbyData.getPlayers().size()){
+            return;
+        }
+        for(UUID player : newLobbyData.getPlayers().keySet()) {
+            if(!lobbyData.containsPlayer(player)){
+                TextRenderer.printText(newLobbyData.getPlayers().get(player) + " joined the game");
+                return;
+            }
+        }
+    }
+
+    private void checkForPlayersLeaving(LobbyData newLobbyData){
+        if(newLobbyData.getPlayers().size() == lobbyData.getPlayers().size()){
+            return;
+        }
+        for(UUID player : lobbyData.getPlayers().keySet()) {
+            if(!newLobbyData.containsPlayer(player)){
+                TextRenderer.printText(Color.getColor("red") + lobbyData.getPlayers().get(player) + " left the game");
+                return;
+            }
+        }
+    }
+
     public String getPlayerUsername() {
         return playerUsername;
     }
 
     public UUID getClientId() {
         return clientId;
+    }
+
+    public LobbyData getLobbyData() {
+        return lobbyData;
+    }
+
+    public void clearLobbyData() {
+        lobbyData = null;
     }
 }

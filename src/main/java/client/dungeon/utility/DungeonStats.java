@@ -4,9 +4,10 @@ import client.dungeon.DungeonGenerator;
 import utility.file.FileInterpreter;
 import utility.file.FileReader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DungeonStats implements FileInterpreter {
+public class DungeonStats implements FileInterpreter, Serializable {
     private int maxRooms;
     private int roomIncrease;
     private float currentThreat;
@@ -50,6 +51,8 @@ public class DungeonStats implements FileInterpreter {
     public void progressFloor(){
         maxRooms += roomIncrease;
         currentThreat *= threatMultiplier;
+
+        // TODO change floor progression to work with multiplayer
         DungeonGenerator.generateDungeon();
     }
 

@@ -3,7 +3,9 @@ package client.dungeon.utility;
 import client.dungeon.rooms.DungeonRoom;
 import utility.Vector2Int;
 
-public class DungeonBounds {
+import java.io.Serializable;
+
+public class DungeonBounds implements Serializable {
     private Vector2Int maxDungeonCoordinate;
     private Vector2Int minDungeonCoordinate;
 

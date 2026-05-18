@@ -4,8 +4,12 @@ import client.game.ClientApplication;
 import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
+import client_server_communication.LobbyJoinRequest;
+import client_server_communication.ServerMessageType;
 
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class MainMenuState extends GameState {
     @Override
@@ -25,6 +29,7 @@ public class MainMenuState extends GameState {
                 Game.changeState(new LobbyState(true));
             }
             else {
+                Game.generateOfflineDungeon();
                 Game.changeState(new PlayingGameState());
             }
             return;
@@ -39,18 +44,26 @@ public class MainMenuState extends GameState {
             if(command.equalsIgnoreCase("offline")){
                 ClientApplication.getClientInstance().disconnect();
             }
+            if(commandParameters.length == 2){
+                if(commandParameters[0].equalsIgnoreCase("join")){
+                    TextRenderer.printText(Color.getColor("yellow") + "Attempting to join lobby...");
+                    try{
+                        ClientApplication.getClientInstance().sendMessage(ServerMessageType.JOIN,
+                                new LobbyJoinRequest(UUID.fromString(commandParameters[1]), ClientApplication.getClientInstance().getClientId()));
+                        Game.changeState(new DefaultGameState());
+                    }
+                    catch (IllegalArgumentException e){
+                        TextRenderer.printText(Color.getColor("red") + "Invalid lobby code, returning to menu...");
+                        Game.changeState(new MainMenuState());
+                    }
+                }
+            }
         }
         else {
             if(command.equalsIgnoreCase("reconnect")){
                 TextRenderer.printText(Color.getColor("yellow") + "Attempting to reconnect to the server...");
                 ClientApplication.connectToServer();
                 Game.changeState(new DefaultGameState());
-            }
-        }
-
-        if(commandParameters.length == 2){
-            if(Game.isConnectedToServer() && command.equalsIgnoreCase("join")){
-                TextRenderer.printText(Color.getColor("yellow") + "Attempting to join lobby...");
             }
         }
     }

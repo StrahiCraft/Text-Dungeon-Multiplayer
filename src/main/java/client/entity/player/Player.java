@@ -38,7 +38,7 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
     public Player() {
         super();
         Instance = this;
-        currentRoom = Dungeon.getStartingRoom();
+        currentRoom = Game.getDungeon().getStartingRoom();
         inventory = new Inventory(10);
 
         equipment = new Equipment();
@@ -47,7 +47,7 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
     public Player(String name, Stats stats) {
         super(name, stats);
         Instance = this;
-        currentRoom = Dungeon.getStartingRoom();
+        currentRoom = Game.getDungeon().getStartingRoom();
         inventory = new Inventory(10);
 
         equipment = new Equipment();
