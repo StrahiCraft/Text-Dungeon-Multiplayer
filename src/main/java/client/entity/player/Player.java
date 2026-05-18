@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class Player extends Entity {
-    public static Player Instance;
-
     private DungeonRoom currentRoom;
     private DungeonRoom previousRoom;
     private PlayerState currentState;
@@ -33,12 +31,9 @@ public class Player extends Entity {
 
     private int gold = 0;
 
-    private int currentScore = 0;
-
     public Player() {
         super();
-        Instance = this;
-        setCurrentRoom(Game.getDungeon().getStartingRoom());
+        currentRoom = Game.getDungeon().getStartingRoom();
         inventory = new Inventory(10);
 
         equipment = new Equipment();
@@ -46,7 +41,6 @@ public class Player extends Entity {
 
     public Player(String name, Stats stats) {
         super(name, stats);
-        Instance = this;
         currentRoom = Game.getDungeon().getStartingRoom();
         inventory = new Inventory(10);
 
@@ -55,14 +49,22 @@ public class Player extends Entity {
 
     @Override
     public void handleDeath() {
-        CombatManager.setInCombat(false);
-        TextRenderer.printText(Color.getColor("red") + "GAME OVER" + Color.resetColor() + "\nYour score was: " + currentScore);
-        Game.changeState(new MainMenuState());
+        if(Game.isConnectedToServer()){
+            // TODO handle multiplayer death
+        }
+        else {
+            CombatManager.setInCombat(false);
+            TextRenderer.printText(Color.getColor("red") + "GAME OVER" + Color.resetColor());
+            Game.changeState(new MainMenuState());
+        }
     }
 
     public void getInput(Scanner input) {
         if(currentRoom == null){
             return;
+        }
+        if(currentState == null){
+            setCurrentRoom(currentRoom);
         }
 
         currentState.getInput(input);
@@ -136,13 +138,5 @@ public class Player extends Entity {
 
     public void setGold(int gold) {
         this.gold = gold;
-    }
-
-    public int getCurrentScore() {
-        return currentScore;
-    }
-
-    public void setCurrentScore(int currentScore) {
-        this.currentScore = currentScore;
     }
 }

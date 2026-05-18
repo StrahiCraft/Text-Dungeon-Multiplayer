@@ -1,6 +1,7 @@
 package client.entity.player.states;
 
 import client.dungeon.rooms.ShopRoom;
+import client.game.Game;
 import client.inventory.item.Item;
 import client.entity.player.Player;
 import client.graphics.Color;
@@ -23,7 +24,7 @@ public class PlayerShopping extends PlayerInInventory {
 
         switch (splitText[0]){
             case "close" -> {
-                Player.Instance.setCurrentState(Player.Instance.getPreviousState());
+                Game.getPlayer().setCurrentState(Game.getPlayer().getPreviousState());
                 TextRenderer.printText("Shop " + Color.getColor("red") + "closed" + Color.resetColor());
                 return true;
             }
@@ -52,7 +53,7 @@ public class PlayerShopping extends PlayerInInventory {
         }
 
         try {
-            Item itemToSell = Player.Instance.getInventory().getItem(Integer.parseInt(instructions[1]));
+            Item itemToSell = Game.getPlayer().getInventory().getItem(Integer.parseInt(instructions[1]));
 
             if(itemToSell == null){
                 TextRenderer.printText("Are you really trying to sell me an item that doesn't exist?");
@@ -65,8 +66,8 @@ public class PlayerShopping extends PlayerInInventory {
                 return;
             }
 
-            Player.Instance.getInventory().removeItem(itemToSell);
-            Player.Instance.addGold(itemToSell.getPrice());
+            Game.getPlayer().getInventory().removeItem(itemToSell);
+            Game.getPlayer().addGold(itemToSell.getPrice());
 
             TextRenderer.printText("Thank you, here's some gold for your troubles. " +
                     itemToSell.getPrice() + Color.getColor("yellow") + " gold" + Color.resetColor() +
@@ -87,7 +88,7 @@ public class PlayerShopping extends PlayerInInventory {
         }
 
         try {
-            Item itemToBuy = ((ShopRoom)Player.Instance.getCurrentRoom()).
+            Item itemToBuy = ((ShopRoom)Game.getPlayer().getCurrentRoom()).
                     getItemForSale(Integer.parseInt(instructions[1]));
 
             if(itemToBuy == null){
@@ -95,14 +96,14 @@ public class PlayerShopping extends PlayerInInventory {
                 TextRenderer.skipLine();
                 return;
             }
-            if(itemToBuy.getPrice() > Player.Instance.getGold()){
+            if(itemToBuy.getPrice() > Game.getPlayer().getGold()){
                 TextRenderer.printText("Sorry, I don't run a charity here.");
                 TextRenderer.skipLine();
                 return;
             }
 
-            ((ShopRoom)Player.Instance.getCurrentRoom()).onItemBought(itemToBuy);
-            Player.Instance.addGold(-itemToBuy.getPrice());
+            ((ShopRoom)Game.getPlayer().getCurrentRoom()).onItemBought(itemToBuy);
+            Game.getPlayer().addGold(-itemToBuy.getPrice());
 
             TextRenderer.printText("Thank you for your kind purchase.");
             TextRenderer.skipLine();
@@ -118,8 +119,8 @@ public class PlayerShopping extends PlayerInInventory {
         TextRenderer.skipLine();
 
         TextRenderer.printText(Color.getColor("yellow") + "Gold: " +
-                Color.resetColor() + Player.Instance.getGold());
-        TextRenderer.printText(Player.Instance.getCurrentRoom().toString());
+                Color.resetColor() + Game.getPlayer().getGold());
+        TextRenderer.printText(Game.getPlayer().getCurrentRoom().toString());
 
         TextRenderer.skipLine();
     }

@@ -1,9 +1,11 @@
 package client_server_communication;
 
 import client.dungeon.Dungeon;
+import client.entity.player.Player;
 import client.graphics.Color;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -15,14 +17,16 @@ public class LobbyData implements Serializable {
     /**
      * List of clients currently connected to this lobby
      */
-    private HashMap<UUID, String> players;
+    private HashMap<UUID, String> playerNames;
     private Dungeon dungeonData;
+    private HashMap<String, Player> playerData;
 
     private boolean joinable = true;
 
     public LobbyData(UUID host, String hostName) {
-        players = new HashMap<>();
-        players.put(host, hostName);
+        playerNames = new HashMap<>();
+        playerData = new HashMap<>();
+        playerNames.put(host, hostName);
         dungeonData = new Dungeon();
     }
 
@@ -32,7 +36,11 @@ public class LobbyData implements Serializable {
      * @return True if the lobby contains the player with the given client id, false otherwise
      */
     public boolean containsPlayer(UUID clientId){
-        return players.containsKey(clientId);
+        return playerNames.containsKey(clientId);
+    }
+
+    public Player getPlayerData(String playerName){
+        return playerData.get(playerName);
     }
 
     /**
@@ -41,7 +49,7 @@ public class LobbyData implements Serializable {
      * @param clientName The name of the player being added to the lobby
      */
     public void addPlayer(UUID clientId, String clientName){
-        players.put(clientId, clientName);
+        playerNames.put(clientId, clientName);
     }
 
     /**
@@ -49,12 +57,18 @@ public class LobbyData implements Serializable {
      * @param clientId The client id of the player that is being removed from the lobby
      */
     public void removePlayer(UUID clientId){
-        players.remove(clientId);
+        playerNames.remove(clientId);
+    }
+
+    public void generatePlayerData() {
+        for(String playerName : playerNames.values()){
+            Player player = new Player();
+        }
     }
 
     public String getPlayerList(){
         StringBuilder playerList = new StringBuilder("-" + Color.getColor("bright blue") + "<host> " + Color.resetColor());
-        for(String player : players.values()){
+        for(String player : playerNames.values()){
             playerList.append("-").append(player).append("\n");
         }
         return playerList.toString();
@@ -76,7 +90,7 @@ public class LobbyData implements Serializable {
         return joinable;
     }
 
-    public HashMap<UUID, String> getPlayers() {
-        return players;
+    public HashMap<UUID, String> getPlayerNames() {
+        return playerNames;
     }
 }

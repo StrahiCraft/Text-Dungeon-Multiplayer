@@ -3,6 +3,7 @@ package client.combat;
 import client.dungeon.Dungeon;
 import client.dungeon.rooms.EmptyRoom;
 import client.entity.enemy.Enemy;
+import client.game.ClientApplication;
 import client.game.Game;
 import client.inventory.item.equipment.EquipItem;
 import client.entity.player.Player;
@@ -21,7 +22,7 @@ public class CombatManager {
 
     public static void resetCombat() {
         enemies.clear();
-        Player.Instance.getStats().refillSpeed();
+        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().refillSpeed();
         inCombat = true;
     }
 
@@ -29,11 +30,11 @@ public class CombatManager {
         inCombat = false;
         TextRenderer.printText("You won the battle and got " + goldReward + Color.getColor("yellow") +
                 " gold " + Color.resetColor() + "for it.");
-        Player.Instance.addGold(goldReward);
-        Player.Instance.getStats().refillSpeed();
+        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
+        player.addGold(goldReward);
+        player.getStats().refillSpeed();
         clearTemporaryStats();
-        Game.getDungeon().setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
-                Player.Instance.getCurrentRoom().getPosition());
+        Game.getDungeon().setRoom(new EmptyRoom(player.getCurrentRoom().getPosition()), player.getCurrentRoom().getPosition());
     }
 
     public static void onEnemyDeath(Enemy deadEnemy) {
@@ -44,7 +45,7 @@ public class CombatManager {
     }
 
     public static void checkForTurnEnd(){
-        if(Player.Instance.getStats().getCurrentSpeed() > 0){
+        if(ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().getCurrentSpeed() > 0){
             return;
         }
 
@@ -64,11 +65,12 @@ public class CombatManager {
         }
 
         Enemy attackedEnemy = enemies.get(index - 1);
+        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
 
         float currenEnemyHealth = attackedEnemy.getStats().getCurrentHealth();
 
-        attackedEnemy.takeDamage(Player.Instance.getStats().getDamage());
-        Player.Instance.getStats().useSpeed(2);
+        attackedEnemy.takeDamage(player.getStats().getDamage());
+        player.getStats().useSpeed(2);
 
         if(attackedEnemy.getStats().getCurrentHealth() == 0){
             TextRenderer.printText("Defeated " + attackedEnemy.getName());
@@ -83,12 +85,13 @@ public class CombatManager {
 
     public static void takeEnemyAttack() {
         Enemy attackingEnemy = getFastestEnemy();
+        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
 
-        float currentPlayerHealth = Player.Instance.getStats().getCurrentHealth();
+        float currentPlayerHealth = player.getStats().getCurrentHealth();
 
-        Player.Instance.takeDamage(attackingEnemy.getStats().getDamage());
+        player.takeDamage(attackingEnemy.getStats().getDamage());
         TextRenderer.printText(attackingEnemy.getName() + " attacks and deals " +
-                (currentPlayerHealth - Player.Instance.getStats().getCurrentHealth()) +
+                (currentPlayerHealth - player.getStats().getCurrentHealth()) +
                 Color.getColor("red") + " damage" + Color.resetColor() + ".");
         attackingEnemy.getStats().useSpeed(2);
 
@@ -96,19 +99,21 @@ public class CombatManager {
     }
 
     public static void useItem(int index) {
-        if(index < 1 || index > Player.Instance.getInventory().getItems().size()){
+        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
+
+        if(index < 1 || index > player.getInventory().getItems().size()){
             TextRenderer.printText(Color.getColor("red") + "There is no such item!" + Color.resetColor());
             return;
         }
 
-        if(Player.Instance.getInventory().getItem(index).getClass() == EquipItem.class){
+        if(player.getInventory().getItem(index).getClass() == EquipItem.class){
             TextRenderer.printText(Color.getColor("red") +
                     "You cannot use equip items during combat!" + Color.resetColor());
             return;
         }
 
-        Player.Instance.getInventory().useItem(index);
-        Player.Instance.getStats().useSpeed(1);
+        player.getInventory().useItem(index);
+        player.getStats().useSpeed(1);
         checkForTurnEnd();
     }
 
@@ -122,14 +127,14 @@ public class CombatManager {
             return;
         }
 
-        Player.Instance.getStats().increaseStats(temporaryStatBonuses, -1);
+        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().increaseStats(temporaryStatBonuses, -1);
         temporaryStatBonuses = new Stats();
         TextRenderer.printText("Temporary stats fade...");
         statsChanged = false;
     }
 
     private static void onTurnEnd(){
-        Player.Instance.getStats().refillSpeed();
+        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().refillSpeed();
         for(Enemy enemy : enemies) {
             enemy.getStats().refillSpeed();
         }
@@ -138,7 +143,7 @@ public class CombatManager {
 
     public static boolean playerTurn() {
         try {
-            return Player.Instance.getStats().getCurrentSpeed() > getFastestEnemy().getStats().getCurrentSpeed();
+            return ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().getCurrentSpeed() > getFastestEnemy().getStats().getCurrentSpeed();
         } catch (NullPointerException ignored){
             return false;
         }

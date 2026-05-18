@@ -1,6 +1,7 @@
 package client.entity.player.states;
 
 import client.entity.player.Player;
+import client.game.ClientApplication;
 import client.game.Game;
 import client.game.game_state.MainMenuState;
 import client.graphics.Color;
@@ -46,9 +47,9 @@ public abstract class PlayerState implements Serializable {
         switch (inputText) {
             case "help" -> getHelp(input);
             case "check" -> TextRenderer.printText(Color.getColor("yellow") + "Gold: " +
-                    Color.resetColor() + Player.Instance.getGold() + "\n" +
-                    Player.Instance.getStats() + "\n" +
-                    Player.Instance.getEquipment());
+                    Color.resetColor() + Game.getPlayer().getGold() + "\n" +
+                    Game.getPlayer().getStats() + "\n" +
+                    Game.getPlayer().getEquipment());
             case "quit" -> Game.changeState(new MainMenuState());
             default -> onRandomStuffInputted();
         }

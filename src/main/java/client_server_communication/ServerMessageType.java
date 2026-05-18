@@ -22,5 +22,7 @@ public enum ServerMessageType {
 
     DISBAND_LOBBY,
     LOBBY_DISBANDED,
-    LEAVE_LOBBY
+    LEAVE_LOBBY,
+
+    START_GAME,
 }

@@ -1,5 +1,6 @@
 package client.inventory.item.potions;
 
+import client.game.Game;
 import client.inventory.item.Item;
 import client.inventory.item.Rarity;
 import client.entity.player.Player;
@@ -41,8 +42,8 @@ public class Potion extends Item {
     @Override
     public void onUse() {
         printOnUseText();
-        Player.Instance.increaseStats(statIncreases);
-        Player.Instance.getInventory().removeItem(this);
+        Game.getPlayer().increaseStats(statIncreases);
+        Game.getPlayer().getInventory().removeItem(this);
     }
 
     @Override

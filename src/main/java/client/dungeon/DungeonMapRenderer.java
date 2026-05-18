@@ -3,6 +3,7 @@ package client.dungeon;
 import client.dungeon.rooms.DungeonRoom;
 import client.dungeon.utility.DungeonBounds;
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 import utility.Vector2Int;
 
@@ -67,7 +68,7 @@ public class DungeonMapRenderer {
             return;
         }
 
-        char roomSymbol = currentRoom.getPosition().equalValue(Player.Instance.getCurrentRoom().getPosition())?
+        char roomSymbol = currentRoom.getPosition().equalValue(Game.getPlayer().getCurrentRoom().getPosition())?
                 'P' : currentRoom.getRoomSymbol();
 
         dungeonMap[(currentRoom.getPosition().getY() - dungeonBounds.getMinDungeonCoordinate().getY()) * 3 + 1]

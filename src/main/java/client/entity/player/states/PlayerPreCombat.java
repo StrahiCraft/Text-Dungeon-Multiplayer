@@ -1,6 +1,7 @@
 package client.entity.player.states;
 
 import client.entity.player.Player;
+import client.game.Game;
 
 import java.util.Scanner;
 
@@ -15,12 +16,12 @@ public class PlayerPreCombat extends PlayerState {
     @Override
     public boolean checkInput(String inputText, Scanner input) {
         if(inputText.equals("fight")){
-            Player.Instance.setCurrentState(new PlayerInCombat());
+            Game.getPlayer().setCurrentState(new PlayerInCombat());
             return true;
         }
 
         if(inputText.equals("flee")){
-            Player.Instance.setCurrentRoom(Player.Instance.getPreviousRoom());
+            Game.getPlayer().setCurrentRoom(Game.getPlayer().getPreviousRoom());
             return true;
         }
 

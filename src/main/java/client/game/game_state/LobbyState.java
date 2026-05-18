@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class LobbyState extends GameState{
     private final boolean host;
 
-    public LobbyState(boolean host){
+    public LobbyState(boolean host) {
         this.host = host;
     }
 
@@ -30,7 +30,8 @@ public class LobbyState extends GameState{
             if(command.equalsIgnoreCase("start")){
                 ClientApplication.getClientInstance().getLobbyData().onGameStarted();
                 Game.changeState(new DefaultGameState());
-                // TODO send message to start game to all players
+                ClientApplication.getClientInstance().getLobbyData().generatePlayerData();
+                ClientApplication.getClientInstance().sendMessage(ServerMessageType.START_GAME, ClientApplication.getClientInstance().getLobbyData());
                 return;
             }
             if(command.equalsIgnoreCase("quit")){

@@ -26,21 +26,20 @@ public class PlayerInLootRoom extends PlayerWandering{
             return false;
         }
 
-        if(Player.Instance.getInventory().isFull()){
+        if(Game.getPlayer().getInventory().isFull()){
             TextRenderer.printText("Your inventory is " + Color.getColor("red") + "full" + Color.resetColor()
             + ". Drop something to " + Color.getColor("bright blue") + "loot " + Color.resetColor() +
                     "the chest.");
             return true;
         }
 
-        TextRenderer.printText("Picked up " + ((LootRoom)Player.Instance.getCurrentRoom()).getLoot());
+        TextRenderer.printText("Picked up " + ((LootRoom)Game.getPlayer().getCurrentRoom()).getLoot());
 
-        Player.Instance.getInventory().addItem(((LootRoom)Player.Instance.getCurrentRoom()).getLoot());
+        Game.getPlayer().getInventory().addItem(((LootRoom)Game.getPlayer().getCurrentRoom()).getLoot());
 
-        Game.getDungeon().setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
-                Player.Instance.getCurrentRoom().getPosition());
-
-
+        Game.getDungeon().setRoom(new EmptyRoom(Game.getPlayer().getCurrentRoom().getPosition()),
+                Game.getPlayer().getCurrentRoom().getPosition());
+        
         return true;
     }
 }

@@ -8,20 +8,20 @@ import client.graphics.Color;
 import client.graphics.TextRenderer;
 import utility.Vector2Int;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Scanner;
 
 public class PlayerWandering extends PlayerState{
 
-    private Dictionary<String, Vector2Int> directionalDictionary =  new Hashtable<>();
+    private HashMap<String, Vector2Int> directionalMap =  new HashMap<>();
 
     public PlayerWandering() {
         super();
         possibleCommands.add(Color.getColor("blue") + "map" + Color.resetColor());
         possibleCommands.add(Color.getColor("green") + "inventory" + Color.resetColor());
 
-        DungeonRoom currentRoom = Player.Instance.getCurrentRoom();
+        DungeonRoom currentRoom = Game.getPlayer().getCurrentRoom();
 
         if(currentRoom.getNorthRoom() != null){
             possibleCommands.add(Color.getColor("bright yellow") + "north" + Color.resetColor());
@@ -36,10 +36,10 @@ public class PlayerWandering extends PlayerState{
             possibleCommands.add(Color.getColor("bright yellow") + "west" + Color.resetColor());
         }
 
-        directionalDictionary.put("north", Vector2Int.up());
-        directionalDictionary.put("east", Vector2Int.right());
-        directionalDictionary.put("south", Vector2Int.down());
-        directionalDictionary.put("west", Vector2Int.left());
+        directionalMap.put("north", Vector2Int.up());
+        directionalMap.put("east", Vector2Int.right());
+        directionalMap.put("south", Vector2Int.down());
+        directionalMap.put("west", Vector2Int.left());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PlayerWandering extends PlayerState{
                 return true;
             }
             case "inventory" -> {
-                Player.Instance.setCurrentState(new PlayerInInventory());
+                Game.getPlayer().setCurrentState(new PlayerInInventory());
                 return true;
             }
             case "north", "east", "south", "west" -> {
@@ -69,6 +69,6 @@ public class PlayerWandering extends PlayerState{
             return;
         }
 
-        Player.Instance.setCurrentRoom(Player.Instance.getCurrentRoom().getNeighbouringRoom(directionalDictionary.get(direction)));
+        Game.getPlayer().setCurrentRoom(Game.getPlayer().getCurrentRoom().getNeighbouringRoom(directionalMap.get(direction)));
     }
 }

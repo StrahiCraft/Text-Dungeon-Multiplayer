@@ -3,6 +3,7 @@ package client.entity.player.states;
 import client.combat.CombatManager;
 import client.dungeon.rooms.EnemyRoom;
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
@@ -15,7 +16,7 @@ public class PlayerInCombat extends PlayerState {
         possibleCommands.add(Color.getColor("red") + "attack" + Color.resetColor());
 
         CombatManager.resetCombat();
-        CombatManager.setEnemies(((EnemyRoom)Player.Instance.getCurrentRoom()).getEnemies());
+        CombatManager.setEnemies(((EnemyRoom) Game.getPlayer().getCurrentRoom()).getEnemies());
 
         combatText();
     }
@@ -31,9 +32,9 @@ public class PlayerInCombat extends PlayerState {
         if(inputText.equals("check")) {
             TextRenderer.printText(CombatManager.asString());
             TextRenderer.printText(Color.getColor("blue") + "Player:\n" + Color.resetColor() +
-                    Player.Instance.getStats() + "\n" +
-                    Player.Instance.getInventory() + "\n" +
-                    Player.Instance.getEquipment());
+                    Game.getPlayer().getStats() + "\n" +
+                    Game.getPlayer().getInventory() + "\n" +
+                    Game.getPlayer().getEquipment());
             combatText();
             return true;
         }
@@ -86,9 +87,9 @@ public class PlayerInCombat extends PlayerState {
 
         TextRenderer.printText(CombatManager.asString());
         TextRenderer.printText(Color.getColor("blue") + "Player:\n" + Color.resetColor() +
-                Player.Instance.getStats() + "\n" +
-                Player.Instance.getInventory() + "\n" +
-                Player.Instance.getEquipment());
+                Game.getPlayer().getStats() + "\n" +
+                Game.getPlayer().getInventory() + "\n" +
+                Game.getPlayer().getEquipment());
 
         setInputQuestion("It is your turn, what will you do?");
     }

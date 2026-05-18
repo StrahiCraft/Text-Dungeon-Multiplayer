@@ -4,6 +4,7 @@ import client.dungeon.rooms.DungeonRoom;
 import client.dungeon.utility.DungeonBounds;
 import client.dungeon.utility.DungeonStats;
 import client.entity.player.Player;
+import client.game.Game;
 import utility.Vector2Int;
 
 import java.io.Serializable;
@@ -47,10 +48,14 @@ public class Dungeon implements Serializable {
 
         dungeonRooms.put(roomPosition.toString(), newRoom);
 
+        if(Game.getPlayer() == null){
+            return;
+        }
+
         // TODO send some signal that a room was changed to change it for all the players
-//        if(Player.Instance.getCurrentRoom().getPosition().equalValue(roomPosition)){
-//            Player.Instance.setCurrentRoom(newRoom);
-//        }
+        if(Game.getPlayer().getCurrentRoom().getPosition().equalValue(roomPosition)){
+            Game.getPlayer().setCurrentRoom(newRoom);
+        }
     }
 
     public DungeonRoom getRandomRoom(){

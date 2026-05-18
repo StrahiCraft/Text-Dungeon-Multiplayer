@@ -1,5 +1,6 @@
 package client.dungeon.rooms;
 
+import client.game.Game;
 import client.inventory.item.Item;
 import client.inventory.item.ItemGenerator;
 import client.entity.player.Player;
@@ -76,7 +77,7 @@ public class ShopRoom extends EmptyRoom {
 
     public void onItemBought(Item boughtItem){
         itemsForSale.remove(boughtItem);
-        Player.Instance.getInventory().addItem(boughtItem);
+        Game.getPlayer().getInventory().addItem(boughtItem);
     }
 
     public ArrayList<Item> getItemsForSale() {

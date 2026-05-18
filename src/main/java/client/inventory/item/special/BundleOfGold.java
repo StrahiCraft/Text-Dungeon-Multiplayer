@@ -38,8 +38,8 @@ public class BundleOfGold extends Item {
     @Override
     public void onUse() {
         int goldIncrease = (int)(Math.random() * 10 * Game.getDungeon().getCurrentDungeonThreat() * goldMultiplier);
-        Player.Instance.addGold(goldIncrease);
-        Player.Instance.getInventory().removeItem(this);
+        Game.getPlayer().addGold(goldIncrease);
+        Game.getPlayer().getInventory().removeItem(this);
 
         TextRenderer.printText("Inside you find " +
                 Color.getColor("yellow") + goldIncrease + " gold" + Color.resetColor() + ".");

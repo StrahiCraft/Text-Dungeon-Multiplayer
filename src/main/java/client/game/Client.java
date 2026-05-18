@@ -1,6 +1,7 @@
 package client.game;
 
 import client.dungeon.DungeonGenerator;
+import client.entity.player.Player;
 import client.game.game_state.LobbyState;
 import client.game.game_state.LoginState;
 import client.game.game_state.MainMenuState;
@@ -229,24 +230,24 @@ public class Client extends Thread {
     }
 
     private void checkForNewPlayers(LobbyData newLobbyData) {
-        if(newLobbyData.getPlayers().size() == lobbyData.getPlayers().size()){
+        if(newLobbyData.getPlayerNames().size() == lobbyData.getPlayerNames().size()){
             return;
         }
-        for(UUID player : newLobbyData.getPlayers().keySet()) {
+        for(UUID player : newLobbyData.getPlayerNames().keySet()) {
             if(!lobbyData.containsPlayer(player)){
-                TextRenderer.printText(newLobbyData.getPlayers().get(player) + " joined the game");
+                TextRenderer.printText(newLobbyData.getPlayerNames().get(player) + " joined the game");
                 return;
             }
         }
     }
 
     private void checkForPlayersLeaving(LobbyData newLobbyData){
-        if(newLobbyData.getPlayers().size() == lobbyData.getPlayers().size()){
+        if(newLobbyData.getPlayerNames().size() == lobbyData.getPlayerNames().size()){
             return;
         }
-        for(UUID player : lobbyData.getPlayers().keySet()) {
+        for(UUID player : lobbyData.getPlayerNames().keySet()) {
             if(!newLobbyData.containsPlayer(player)){
-                TextRenderer.printText(Color.getColor("red") + lobbyData.getPlayers().get(player) + " left the game");
+                TextRenderer.printText(Color.getColor("red") + lobbyData.getPlayerNames().get(player) + " left the game");
                 return;
             }
         }

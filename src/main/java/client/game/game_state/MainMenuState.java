@@ -30,6 +30,7 @@ public class MainMenuState extends GameState {
             }
             else {
                 Game.generateOfflineDungeon();
+                Game.generateOfflinePlayer();
                 Game.changeState(new PlayingGameState());
             }
             return;

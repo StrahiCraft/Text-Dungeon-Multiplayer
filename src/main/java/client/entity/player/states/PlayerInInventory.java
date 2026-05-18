@@ -1,5 +1,6 @@
 package client.entity.player.states;
 
+import client.game.Game;
 import client.inventory.item.equipment.EquipmentSlot;
 import client.entity.player.Player;
 import client.graphics.Color;
@@ -29,7 +30,7 @@ public class PlayerInInventory extends PlayerState {
 
         switch (splitText[0]){
             case "close" -> {
-                Player.Instance.setCurrentState(Player.Instance.getPreviousState());
+                Game.getPlayer().setCurrentState(Game.getPlayer().getPreviousState());
                 TextRenderer.printText("Inventory " + Color.getColor("red") + "closed" + Color.resetColor());
                 return true;
             }
@@ -67,7 +68,7 @@ public class PlayerInInventory extends PlayerState {
         }
 
         try {
-            Player.Instance.getInventory().useItem(Integer.parseInt(instructions[1]));
+            Game.getPlayer().getInventory().useItem(Integer.parseInt(instructions[1]));
         }
         catch (NumberFormatException ignored) {
             TextRenderer.printText("To use an item type in "
@@ -85,7 +86,7 @@ public class PlayerInInventory extends PlayerState {
         }
 
         try {
-            Player.Instance.getInventory().removeItem(Integer.parseInt(instructions[1]));
+            Game.getPlayer().getInventory().removeItem(Integer.parseInt(instructions[1]));
         }
         catch (NumberFormatException ignored) {
             TextRenderer.printText("To drop an item type in "
@@ -105,7 +106,7 @@ public class PlayerInInventory extends PlayerState {
 
         try{
             EquipmentSlot equipmentSlot = EquipmentSlot.valueOf(instructions[1].toUpperCase());
-            Player.Instance.getEquipment().unequip(equipmentSlot);
+            Game.getPlayer().getEquipment().unequip(equipmentSlot);
         }
         catch (IllegalArgumentException e){
             TextRenderer.printText("To unequip an item type in "
@@ -124,7 +125,7 @@ public class PlayerInInventory extends PlayerState {
         }
 
         try {
-            TextRenderer.printText(Player.Instance.getInventory().
+            TextRenderer.printText(Game.getPlayer().getInventory().
                     getItem(Integer.parseInt(instructions[1])).info());
         }
         catch (NumberFormatException ignored){
@@ -141,6 +142,6 @@ public class PlayerInInventory extends PlayerState {
         + "or " + Color.getColor("yellow") + "drop " + Color.resetColor() + "an item, " + Color.getColor("gray") +
                 "unequip " + Color.resetColor() + "an equip item, or " + Color.getColor("red") + "close " + Color.resetColor()
         + "the inventory.");
-        TextRenderer.printText(Player.Instance.getInventory().toString());
+        TextRenderer.printText(Game.getPlayer().getInventory().toString());
     }
 }

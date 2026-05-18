@@ -1,6 +1,7 @@
 package client.inventory.item.equipment;
 
 import client.entity.player.Player;
+import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 
@@ -23,7 +24,7 @@ public class Equipment implements Serializable {
     }
 
     public void equip(EquipItem equipItem){
-        float maxSpeedPostEquip = Player.Instance.getStats().getMaxSpeed() + equipItem.getStatIncreases().getMaxSpeed();
+        float maxSpeedPostEquip = Game.getPlayer().getStats().getMaxSpeed() + equipItem.getStatIncreases().getMaxSpeed();
 
         EquipItem equippedItem = equippedItems.get(equipItem.getEquipmentSlot());
         if(equippedItem != null){
@@ -36,21 +37,21 @@ public class Equipment implements Serializable {
             return;
         }
 
-        Player.Instance.getInventory().removeItem(equipItem);
+        Game.getPlayer().getInventory().removeItem(equipItem);
 
         if(equippedItems.get(equipItem.getEquipmentSlot()) != null) {
             EquipItem unequippedItem = equippedItems.get(equipItem.getEquipmentSlot());
             unequippedItem.onUnequip();
-            Player.Instance.getInventory().addItem(unequippedItem);
+            Game.getPlayer().getInventory().addItem(unequippedItem);
         }
 
         equippedItems.put(equipItem.getEquipmentSlot(), equipItem);
         equipItem.onEquip();
-        Player.Instance.getStats().refillSpeed();
+        Game.getPlayer().getStats().refillSpeed();
     }
 
     public void unequip(EquipmentSlot equipmentSlot) {
-        if(Player.Instance.getInventory().isFull()) {
+        if(Game.getPlayer().getInventory().isFull()) {
             TextRenderer.printText("Cannot" +
                     Color.getColor("gray") + " unequip," + Color.resetColor() +
                     Color.getColor("red") + " inventory is full." + Color.resetColor());
@@ -64,7 +65,7 @@ public class Equipment implements Serializable {
 
         EquipItem equippedItem = equippedItems.get(equipmentSlot);
         if(equippedItem != null){
-            float healthPostUnequip = Player.Instance.getStats().getCurrentHealth() -
+            float healthPostUnequip = Game.getPlayer().getStats().getCurrentHealth() -
                     equippedItem.getStatIncreases().getMaxHealth();
 
             if(healthPostUnequip <= 0) {
@@ -76,7 +77,7 @@ public class Equipment implements Serializable {
 
         EquipItem unequippedItem = equippedItems.get(equipmentSlot);
         unequippedItem.onUnequip();
-        Player.Instance.getInventory().addItem(unequippedItem);
+        Game.getPlayer().getInventory().addItem(unequippedItem);
 
         equippedItems.remove(equipmentSlot);
         equippedItems.get(equipmentSlot);
@@ -100,15 +101,13 @@ public class Equipment implements Serializable {
 
     @Override
     public String toString() {
-        String equipment = "Equipment:\n" +
+        return "Equipment:\n" +
                 equipmentFromSlot(EquipmentSlot.HEAD) +
                 equipmentFromSlot(EquipmentSlot.BODY) +
                 equipmentFromSlot(EquipmentSlot.HANDS) +
                 equipmentFromSlot(EquipmentSlot.LEGS) +
                 equipmentFromSlot(EquipmentSlot.FEET) +
                 equipmentFromSlot(EquipmentSlot.WEAPON);
-
-        return equipment;
     }
 
     private String equipmentFromSlot(EquipmentSlot equipmentSlot){

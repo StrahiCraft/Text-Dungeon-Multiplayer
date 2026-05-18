@@ -183,7 +183,7 @@ public class ClientHandler extends Thread {
     }
 
     private void updateLobby(LobbyData lobbyData){
-        for(UUID clientId : lobbyData.getPlayers().keySet()){
+        for(UUID clientId : lobbyData.getPlayerNames().keySet()){
             if(ServerApplication.getClientHandler(clientId) != null){
                 ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.UPDATE_LOBBY, lobbyData);
             }
@@ -198,7 +198,7 @@ public class ClientHandler extends Thread {
 
     private void disbandLobby(ServerMessage messageData) {
         lobbyData = (LobbyData) messageData.getMessageData();
-        for(UUID clientId : lobbyData.getPlayers().keySet()){
+        for(UUID clientId : lobbyData.getPlayerNames().keySet()){
             ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.LOBBY_DISBANDED);
         }
         lobbyData = null;

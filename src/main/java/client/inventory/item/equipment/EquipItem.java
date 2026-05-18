@@ -1,5 +1,6 @@
 package client.inventory.item.equipment;
 
+import client.game.Game;
 import client.inventory.item.Item;
 import client.inventory.item.Rarity;
 import client.entity.player.Player;
@@ -46,7 +47,7 @@ public class EquipItem extends Item {
 
     @Override
     public void onUse() {
-        Player.Instance.getEquipment().equip(this);
+        Game.getPlayer().getEquipment().equip(this);
     }
 
     @Override
@@ -92,12 +93,12 @@ public class EquipItem extends Item {
 
     public void onEquip(){
         TextRenderer.printText("Equipped " + this);
-        Player.Instance.increaseStats(statIncreases);
+        Game.getPlayer().increaseStats(statIncreases);
     }
 
     public void onUnequip(){
         TextRenderer.printText("Unequipped " + this);
-        Player.Instance.decreaseStats(statIncreases);
+        Game.getPlayer().decreaseStats(statIncreases);
     }
 
     @Override
