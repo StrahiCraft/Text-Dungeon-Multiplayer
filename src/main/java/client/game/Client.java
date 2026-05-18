@@ -5,6 +5,7 @@ import client.entity.player.Player;
 import client.game.game_state.LobbyState;
 import client.game.game_state.LoginState;
 import client.game.game_state.MainMenuState;
+import client.game.game_state.PlayingGameState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 import client_server_communication.LobbyData;
@@ -149,6 +150,7 @@ public class Client extends Thread {
                     case JOIN_FAIL -> onJoin(false, receivedMessage);
                     case UPDATE_LOBBY -> updateLobbyData(receivedMessage);
                     case LOBBY_DISBANDED -> onLobbyDisbanded();
+                    case START_GAME -> onGameStarted(receivedMessage);
                 }
             }
 
@@ -251,6 +253,12 @@ public class Client extends Thread {
                 return;
             }
         }
+    }
+
+    private void onGameStarted(ServerMessage messageData){
+        updateLobbyData(messageData);
+        TextRenderer.printText(Color.getColor("green") + "The game has started, press enter to start playing!");
+        Game.changeState(new PlayingGameState());
     }
 
     public String getPlayerUsername() {

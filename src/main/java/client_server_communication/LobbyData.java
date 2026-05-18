@@ -63,6 +63,8 @@ public class LobbyData implements Serializable {
     public void generatePlayerData() {
         for(String playerName : playerNames.values()){
             Player player = new Player();
+            player.setName(playerName);
+            playerData.put(playerName, player);
         }
     }
 

@@ -105,6 +105,8 @@ public class ClientHandler extends Thread {
                     case DISBAND_LOBBY -> disbandLobby(messageFromClient);
                     case LOBBY_DISBANDED -> lobbyData = null;
                     case LEAVE_LOBBY -> leaveLobby(messageFromClient);
+
+                    case START_GAME -> startGame(messageFromClient);
                     default -> System.out.println("Unknown message type " + messageType);
                 }
             }
@@ -202,6 +204,14 @@ public class ClientHandler extends Thread {
             ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.LOBBY_DISBANDED);
         }
         lobbyData = null;
+    }
+
+    private void startGame(ServerMessage messageData) {
+        lobbyData = (LobbyData) messageData.getMessageData();
+
+        for(UUID clientId : lobbyData.getPlayerNames().keySet()){
+            ServerApplication.getClientHandler(clientId).sendMessage(ServerMessageType.START_GAME, lobbyData);
+        }
     }
 
     public LobbyData getLobbyData() {
