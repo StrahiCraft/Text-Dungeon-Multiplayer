@@ -106,6 +106,8 @@ public class ClientHandler extends Thread {
                     case LOBBY_DISBANDED -> lobbyData = null;
                     case LEAVE_LOBBY -> leaveLobby(messageFromClient);
 
+                    case UPDATE_LOBBY -> updateLobby((LobbyData) messageFromClient.getMessageData());
+
                     case START_GAME -> startGame(messageFromClient);
                     default -> System.out.println("Unknown message type " + messageType);
                 }

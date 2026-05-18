@@ -1,6 +1,9 @@
 package client.dungeon.rooms;
 
 import client.entity.player.states.PlayerState;
+import client.game.ClientApplication;
+import client.game.Game;
+import client_server_communication.ServerMessageType;
 import utility.Vector2Int;
 
 import java.io.Serializable;
@@ -147,6 +150,11 @@ public abstract class DungeonRoom implements Serializable {
 
     public void setExplored(boolean explored) {
         this.explored = explored;
+        if(this.explored){
+            if(Game.isConnectedToServer()){
+                ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
+            }
+        }
     }
 
     public char getRoomSymbol() {

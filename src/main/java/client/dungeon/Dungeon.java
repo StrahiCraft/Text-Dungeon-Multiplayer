@@ -4,7 +4,9 @@ import client.dungeon.rooms.DungeonRoom;
 import client.dungeon.utility.DungeonBounds;
 import client.dungeon.utility.DungeonStats;
 import client.entity.player.Player;
+import client.game.ClientApplication;
 import client.game.Game;
+import client_server_communication.ServerMessageType;
 import utility.Vector2Int;
 
 import java.io.Serializable;
@@ -52,7 +54,10 @@ public class Dungeon implements Serializable {
             return;
         }
 
-        // TODO send some signal that a room was changed to change it for all the players
+        if(Game.isConnectedToServer()){
+            ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
+        }
+
         if(Game.getPlayer().getCurrentRoom().getPosition().equalValue(roomPosition)){
             Game.getPlayer().setCurrentRoom(newRoom);
         }
