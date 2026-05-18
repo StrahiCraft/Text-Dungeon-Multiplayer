@@ -1,6 +1,7 @@
 package utility;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Vector2Int implements Serializable {
     private int x;

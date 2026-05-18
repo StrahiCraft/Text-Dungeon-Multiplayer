@@ -5,9 +5,7 @@ import client.entity.player.Player;
 import client.graphics.Color;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Data for lobbies, each lobby contains a list of the connected clients, the account names of the players logging in
@@ -41,6 +39,10 @@ public class LobbyData implements Serializable {
 
     public Player getPlayerData(String playerName){
         return playerData.get(playerName);
+    }
+
+    public Collection<Player> getAllPlayerData(){
+        return playerData.values();
     }
 
     /**

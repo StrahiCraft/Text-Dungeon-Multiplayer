@@ -1,9 +1,7 @@
 package client.entity.player.states;
 
-import client.dungeon.Dungeon;
 import client.dungeon.rooms.EmptyRoom;
 import client.dungeon.rooms.LootRoom;
-import client.entity.player.Player;
 import client.game.Game;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
@@ -39,7 +37,7 @@ public class PlayerInLootRoom extends PlayerWandering{
 
         Game.getDungeon().setRoom(new EmptyRoom(Game.getPlayer().getCurrentRoom().getPosition()),
                 Game.getPlayer().getCurrentRoom().getPosition());
-        
+
         return true;
     }
 }

@@ -3,6 +3,7 @@ package client.dungeon;
 import client.dungeon.rooms.DungeonRoom;
 import client.dungeon.utility.DungeonBounds;
 import client.entity.player.Player;
+import client.game.ClientApplication;
 import client.game.Game;
 import client.graphics.Color;
 import utility.Vector2Int;
@@ -28,6 +29,9 @@ public class DungeonMapRenderer {
     public static String getRoomColor(char roomType){
         if(roomType == 'P'){
             return Color.getColor("green");
+        }
+        if(roomType == 'p'){
+            return Color.getColor("bright blue");
         }
         if(roomType == 'E'){
             return Color.getColor("red");
@@ -69,7 +73,7 @@ public class DungeonMapRenderer {
         }
 
         char roomSymbol = currentRoom.getPosition().equalValue(Game.getPlayer().getCurrentRoom().getPosition())?
-                'P' : currentRoom.getRoomSymbol();
+                'P' : playerInRoom(currentRoom)? 'p' : currentRoom.getRoomSymbol();
 
         dungeonMap[(currentRoom.getPosition().getY() - dungeonBounds.getMinDungeonCoordinate().getY()) * 3 + 1]
                 [(currentRoom.getPosition().getX() - dungeonBounds.getMinDungeonCoordinate().getX()) * 3 + 1] = roomSymbol;
@@ -89,5 +93,18 @@ public class DungeonMapRenderer {
 
         dungeonMap[(currentRoom.getPosition().getY() - dungeonBounds.getMinDungeonCoordinate().getY()) * 3 + 1 + direction.getY()]
                 [(currentRoom.getPosition().getX() - dungeonBounds.getMinDungeonCoordinate().getX()) * 3 + 1 + direction.getX()] = hallwayCharacter;
+    }
+
+    private static boolean playerInRoom(DungeonRoom room){
+        if(!Game.isConnectedToServer()){
+            return false;
+        }
+
+        for(Player player : ClientApplication.getClientInstance().getLobbyData().getAllPlayerData()){
+            if(player.getCurrentRoom().getPosition().equalValue(room.getPosition())){
+                return true;
+            }
+        }
+        return false;
     }
 }
