@@ -36,7 +36,6 @@ public class PlayerInLootRoom extends PlayerWandering{
         TextRenderer.printText("Picked up " + ((LootRoom)Player.Instance.getCurrentRoom()).getLoot());
 
         Player.Instance.getInventory().addItem(((LootRoom)Player.Instance.getCurrentRoom()).getLoot());
-        Player.Instance.increaseScore(1);
 
         Game.getDungeon().setRoom(new EmptyRoom(Player.Instance.getCurrentRoom().getPosition()),
                 Player.Instance.getCurrentRoom().getPosition());

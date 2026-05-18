@@ -20,7 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class Player extends Entity implements utility.file.FileWriter, FileInterpreter {
+public class Player extends Entity {
     public static Player Instance;
 
     private DungeonRoom currentRoom;
@@ -38,7 +38,7 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
     public Player() {
         super();
         Instance = this;
-        currentRoom = Game.getDungeon().getStartingRoom();
+        setCurrentRoom(Game.getDungeon().getStartingRoom());
         inventory = new Inventory(10);
 
         equipment = new Equipment();
@@ -74,53 +74,6 @@ public class Player extends Entity implements utility.file.FileWriter, FileInter
         if(gold < 0) {
             gold = 0;
         }
-    }
-
-    public int increaseScore(int amount) throws IllegalScoreIncreaseException {
-        if(amount < 0) {
-            throw new IllegalScoreIncreaseException("Score increase cannot be negative!");
-        }
-
-        currentScore += amount;
-        
-        return currentScore;
-    }
-
-    @Override
-    public void writeToFile() {
-        try {
-            File file = new File("src/main/resources/assets/champion.txt");
-            file.createNewFile();
-
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write("name=" + getName() + "\nhighScore=" + currentScore + "\n");
-
-            fileWriter.close();
-        } catch (IOException e) {
-            System.out.println(Color.getColor("bright red") + "Error while creating or writing to utility.file: "
-                    + Color.resetColor() + "src/main/resources/assets/enemies" + getName() + ".txt");
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void interpretFileData(ArrayList<String> fileData) {
-        if(fileData.size() != 2 || fileData == null){
-            writeToFile();
-        }
-
-        setName(fileData.get(0));
-        try{
-            currentScore = Integer.parseInt(fileData.get(1));
-        }
-        catch(NumberFormatException e){
-            System.out.println("Error: " + Color.getColor("red") + "Error when reading champion score." + Color.resetColor());
-        }
-    }
-
-    @Override
-    public void writeToFile(FileWriter fileWriter) {
-        writeToFile();
     }
 
     public DungeonRoom getCurrentRoom() {

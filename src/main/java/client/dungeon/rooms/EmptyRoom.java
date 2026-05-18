@@ -25,7 +25,6 @@ public class EmptyRoom extends DungeonRoom {
     public void onRoomEntered() {
         String onRoomEnterText = "You find yourself in an empty room." + directionText();
         TextRenderer.printText(onRoomEnterText);
-        Player.Instance.increaseScore(1);
     }
 
     @Override

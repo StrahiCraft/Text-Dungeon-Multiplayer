@@ -38,7 +38,6 @@ public class CombatManager {
 
     public static void onEnemyDeath(Enemy deadEnemy) {
         enemies.remove(deadEnemy);
-        Player.Instance.increaseScore((int)(10 * deadEnemy.getThreatLevel()));
         if(enemies.isEmpty()){
             CombatManager.endCombat();
         }

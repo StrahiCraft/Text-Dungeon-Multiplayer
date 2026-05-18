@@ -15,23 +15,26 @@ public class PlayingGameState extends GameState{
     private Player player;
 
     private void initializeGame(Scanner input){
-        player = new Player();
-        Stats playerStats = new Stats();
-        // TODO set stats based on what the host sends if the player is playing online
-        playerStats.interpretFileData(FileReader.readFile("src/main/resources/assets/config/playerStats.txt"));
-        player.setStats(playerStats);
+
+        String playerName;
 
         if(Game.isConnectedToServer()){
-            player.setName(ClientApplication.getClientInstance().getPlayerUsername());
+            playerName = ClientApplication.getClientInstance().getPlayerUsername();
         }
         else {
             TextRenderer.printText("Enter your name " + Color.getColor("blue") + "PLAYER" + Color.resetColor() + ": ");
-            player.setName(input.nextLine());
+            playerName = input.nextLine();
         }
 
         TextRenderer.skipLine();
         TextRenderer.printText("Entering " + Color.getColor("red") + "DUNGEON" +  Color.resetColor() + "...");
         TextRenderer.skipLine();
+
+        player = new Player();
+        Stats playerStats = new Stats();
+        playerStats.interpretFileData(FileReader.readFile("src/main/resources/assets/config/playerStats.txt"));
+        player.setStats(playerStats);
+        player.setName(playerName);
 
         gameInitialized = true;
     }
