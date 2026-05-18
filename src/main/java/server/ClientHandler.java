@@ -165,7 +165,14 @@ public class ClientHandler extends Thread {
 
     private void joinGame(ServerMessage messageData){
         LobbyJoinRequest joinRequest = (LobbyJoinRequest) messageData.getMessageData();
-        LobbyData joiningLobby = ServerApplication.getClientHandler(joinRequest.getLobbyCode()).getLobbyData();
+        LobbyData joiningLobby = null;
+
+        try {
+            joiningLobby = ServerApplication.getClientHandler(joinRequest.getLobbyCode()).getLobbyData();
+        }
+        catch (NullPointerException e){
+            sendMessage(ServerMessageType.JOIN_FAIL);
+        }
 
         if(joiningLobby == null){
             sendMessage(ServerMessageType.JOIN_FAIL);

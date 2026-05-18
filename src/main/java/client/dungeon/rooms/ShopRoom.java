@@ -1,5 +1,6 @@
 package client.dungeon.rooms;
 
+import client.game.ClientApplication;
 import client.game.Game;
 import client.inventory.item.Item;
 import client.inventory.item.ItemGenerator;
@@ -8,6 +9,7 @@ import client.entity.player.states.PlayerInShopRoom;
 import client.entity.player.states.PlayerState;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
+import client_server_communication.ServerMessageType;
 import utility.Vector2Int;
 
 import java.util.ArrayList;
@@ -78,6 +80,10 @@ public class ShopRoom extends EmptyRoom {
     public void onItemBought(Item boughtItem){
         itemsForSale.remove(boughtItem);
         Game.getPlayer().getInventory().addItem(boughtItem);
+
+        if(Game.isConnectedToServer()){
+            ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
+        }
     }
 
     public ArrayList<Item> getItemsForSale() {

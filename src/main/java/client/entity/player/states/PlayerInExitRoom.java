@@ -1,9 +1,12 @@
 package client.entity.player.states;
 
 import client.dungeon.Dungeon;
+import client.dungeon.DungeonGenerator;
 import client.entity.player.Player;
+import client.game.ClientApplication;
 import client.game.Game;
 import client.graphics.Color;
+import client_server_communication.ServerMessageType;
 
 import java.util.Scanner;
 
@@ -24,6 +27,9 @@ public class PlayerInExitRoom extends PlayerWandering{
         }
 
         Game.getDungeon().progressFloor();
+        ClientApplication.getClientInstance().getLobbyData().setDungeonData(DungeonGenerator.generateDungeon(Game.getDungeon().getDungeonStats()));
+        ClientApplication.getClientInstance().getLobbyData().progressPlayersToNextFloor();
+        ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY);
         return true;
     }
 }

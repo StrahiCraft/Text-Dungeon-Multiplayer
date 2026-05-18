@@ -21,6 +21,10 @@ public class Dungeon implements Serializable {
         resetDungeon();
     }
 
+    public Dungeon(DungeonStats stats){
+        dungeonStats = stats;
+    }
+
     public void resetDungeon(){
         dungeonStats.resetDungeonStats();
     }

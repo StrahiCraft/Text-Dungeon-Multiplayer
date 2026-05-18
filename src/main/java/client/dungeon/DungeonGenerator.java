@@ -1,6 +1,7 @@
 package client.dungeon;
 
 import client.dungeon.rooms.*;
+import client.dungeon.utility.DungeonStats;
 import utility.Vector2Int;
 
 import java.util.ArrayList;
@@ -9,6 +10,10 @@ import java.util.Hashtable;
 import java.util.Stack;
 
 public class DungeonGenerator {
+    public static Dungeon generateDungeon(DungeonStats stats){
+        return generateDungeon(new Dungeon(stats));
+    }
+
     public static Dungeon generateDungeon(){
         return generateDungeon(new Dungeon());
     }

@@ -1,6 +1,5 @@
 package client.dungeon.rooms;
 
-import client.dungeon.Dungeon;
 import client.entity.enemy.Enemy;
 import client.entity.enemy.EnemyGenerator;
 import client.entity.player.states.PlayerPreCombat;
@@ -53,7 +52,7 @@ public class EnemyRoom extends DungeonRoom {
     }
 
     private void generateEnemies() {
-        enemies = new ArrayList<Enemy>();
+        enemies = new ArrayList<>();
 
         float remainingThreat = Game.getDungeon().getCurrentDungeonThreat();
 

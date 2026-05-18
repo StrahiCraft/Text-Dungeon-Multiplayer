@@ -45,6 +45,15 @@ public class LobbyData implements Serializable {
         return playerData.values();
     }
 
+    public void progressPlayersToNextFloor(){
+        for(Player player : playerData.values()){
+            if(player.getStats().getCurrentHealth() <= 0){
+                player.getStats().setCurrentHealth(1);
+            }
+            player.setCurrentRoom(dungeonData.getStartingRoom());
+        }
+    }
+
     /**
      * Adds the given player to the lobby
      * @param clientId The client id of the player being added to the lobby

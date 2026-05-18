@@ -12,14 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class DungeonMapRenderer {
-
     public static String renderDungeonMap(Dungeon dungeon){
         char[][] dungeonMap = fillDungeonMap(dungeon);
         StringBuilder mapString = new StringBuilder();
 
         for(int x = dungeonMap.length - 1; x > 0; x--){
             for(int y = 0; y < dungeonMap[x].length; y++){
-                mapString.append(getRoomColor(dungeonMap[x][y]) + dungeonMap[x][y] + "\u001B[0m");
+                mapString.append(getRoomColor(dungeonMap[x][y])).append(dungeonMap[x][y]).append("\u001B[0m");
             }
             mapString.append('\n');
         }

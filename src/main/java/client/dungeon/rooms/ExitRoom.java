@@ -8,7 +8,6 @@ import client.graphics.TextRenderer;
 public class ExitRoom extends EmptyRoom {
     public ExitRoom() {
         setRoomSymbol('V');
-
     }
 
     @Override
