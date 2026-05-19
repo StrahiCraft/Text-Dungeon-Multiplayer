@@ -88,7 +88,9 @@ public class Player extends Entity {
         currentState = currentRoom.getRoomState();
         currentRoom.setExplored(true);
 
-        currentRoom.onRoomEntered();
+        if(this == Game.getPlayer()){
+            currentRoom.onRoomEntered();
+        }
     }
 
     public DungeonRoom getPreviousRoom() {

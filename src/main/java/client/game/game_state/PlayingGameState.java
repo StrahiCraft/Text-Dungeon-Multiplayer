@@ -29,7 +29,11 @@ public class PlayingGameState extends GameState{
         if(!gameInitialized){
             initializeGame(input);
         }
-
-        Game.getPlayer().getInput(input);
+        try{
+            Game.getPlayer().getInput(input);
+        }
+        catch (ClassCastException e){
+            TextRenderer.printText(Color.getColor("yellow") + "While doing that, you notice the room is now empty...");
+        }
     }
 }
