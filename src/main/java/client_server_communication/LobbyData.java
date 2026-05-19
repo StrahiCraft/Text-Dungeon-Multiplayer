@@ -1,6 +1,7 @@
 package client_server_communication;
 
 import client.dungeon.Dungeon;
+import client.dungeon.rooms.DungeonRoom;
 import client.entity.player.Player;
 import client.graphics.Color;
 
@@ -76,6 +77,14 @@ public class LobbyData implements Serializable {
             Player player = new Player();
             player.setName(playerName);
             playerData.put(playerName, player);
+        }
+    }
+
+    public void updateCurrentPlayerRoom(DungeonRoom newCurrentRoom){
+        for(Player player : playerData.values()){
+            if(player.getCurrentRoom().getPosition().equalValue(newCurrentRoom.getPosition())){
+                player.setCurrentRoom(newCurrentRoom);
+            }
         }
     }
 

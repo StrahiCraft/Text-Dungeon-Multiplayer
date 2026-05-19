@@ -59,10 +59,10 @@ public class Dungeon implements Serializable {
         }
 
         if(Game.isConnectedToServer()){
+            ClientApplication.getClientInstance().getLobbyData().updateCurrentPlayerRoom(newRoom);
             ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
         }
-
-        if(Game.getPlayer().getCurrentRoom().getPosition().equalValue(roomPosition)){
+        else {
             Game.getPlayer().setCurrentRoom(newRoom);
         }
     }
