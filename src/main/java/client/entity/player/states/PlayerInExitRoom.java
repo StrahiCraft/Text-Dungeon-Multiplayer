@@ -27,9 +27,14 @@ public class PlayerInExitRoom extends PlayerWandering{
         }
 
         Game.getDungeon().progressFloor();
-        ClientApplication.getClientInstance().getLobbyData().setDungeonData(DungeonGenerator.generateDungeon(Game.getDungeon().getDungeonStats()));
-        ClientApplication.getClientInstance().getLobbyData().progressPlayersToNextFloor();
-        ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY);
+        if(Game.isConnectedToServer()){
+            ClientApplication.getClientInstance().getLobbyData().setDungeonData(DungeonGenerator.generateDungeon(Game.getDungeon().getDungeonStats()));
+            ClientApplication.getClientInstance().getLobbyData().progressPlayersToNextFloor();
+            ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY);
+        }
+        else {
+            Game.generateOfflineDungeon(Game.getDungeon().getDungeonStats());
+        }
         return true;
     }
 }

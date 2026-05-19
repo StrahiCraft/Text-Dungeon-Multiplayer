@@ -2,6 +2,7 @@ package client.game;
 
 import client.dungeon.Dungeon;
 import client.dungeon.DungeonGenerator;
+import client.dungeon.utility.DungeonStats;
 import client.entity.enemy.EnemyGenerator;
 import client.entity.player.Player;
 import client.game.game_state.DefaultGameState;
@@ -64,6 +65,13 @@ public class Game extends Thread {
             return  ClientApplication.getClientInstance().getLobbyData().getDungeonData();
         }
         return offlineDungeon;
+    }
+
+    public static void generateOfflineDungeon(DungeonStats stats){
+        if(!connectedToServer){
+            offlineDungeon = new Dungeon(stats);
+            offlineDungeon = DungeonGenerator.generateDungeon();
+        }
     }
 
     public static void generateOfflineDungeon(){

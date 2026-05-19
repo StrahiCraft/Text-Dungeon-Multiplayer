@@ -1,12 +1,9 @@
 package client.combat;
 
-import client.dungeon.Dungeon;
 import client.dungeon.rooms.EmptyRoom;
 import client.entity.enemy.Enemy;
-import client.game.ClientApplication;
 import client.game.Game;
 import client.inventory.item.equipment.EquipItem;
-import client.entity.player.Player;
 import client.graphics.Color;
 import client.graphics.TextRenderer;
 import utility.Stats;
@@ -22,7 +19,7 @@ public class CombatManager {
 
     public static void resetCombat() {
         enemies.clear();
-        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().refillSpeed();
+        Game.getPlayer().getStats().refillSpeed();
         inCombat = true;
     }
 
@@ -30,11 +27,10 @@ public class CombatManager {
         inCombat = false;
         TextRenderer.printText("You won the battle and got " + goldReward + Color.getColor("yellow") +
                 " gold " + Color.resetColor() + "for it.");
-        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
-        player.addGold(goldReward);
-        player.getStats().refillSpeed();
+        Game.getPlayer().addGold(goldReward);
+        Game.getPlayer().getStats().refillSpeed();
         clearTemporaryStats();
-        Game.getDungeon().setRoom(new EmptyRoom(player.getCurrentRoom().getPosition()), player.getCurrentRoom().getPosition());
+        Game.getDungeon().setRoom(new EmptyRoom(Game.getPlayer().getCurrentRoom().getPosition()), Game.getPlayer().getCurrentRoom().getPosition());
     }
 
     public static void onEnemyDeath(Enemy deadEnemy) {
@@ -45,7 +41,7 @@ public class CombatManager {
     }
 
     public static void checkForTurnEnd(){
-        if(ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().getCurrentSpeed() > 0){
+        if(Game.getPlayer().getStats().getCurrentSpeed() > 0){
             return;
         }
 
@@ -65,12 +61,11 @@ public class CombatManager {
         }
 
         Enemy attackedEnemy = enemies.get(index - 1);
-        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
 
         float currenEnemyHealth = attackedEnemy.getStats().getCurrentHealth();
 
-        attackedEnemy.takeDamage(player.getStats().getDamage());
-        player.getStats().useSpeed(2);
+        attackedEnemy.takeDamage(Game.getPlayer().getStats().getDamage());
+        Game.getPlayer().getStats().useSpeed(2);
 
         if(attackedEnemy.getStats().getCurrentHealth() == 0){
             TextRenderer.printText("Defeated " + attackedEnemy.getName());
@@ -85,13 +80,12 @@ public class CombatManager {
 
     public static void takeEnemyAttack() {
         Enemy attackingEnemy = getFastestEnemy();
-        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
 
-        float currentPlayerHealth = player.getStats().getCurrentHealth();
+        float currentPlayerHealth = Game.getPlayer().getStats().getCurrentHealth();
 
-        player.takeDamage(attackingEnemy.getStats().getDamage());
+        Game.getPlayer().takeDamage(attackingEnemy.getStats().getDamage());
         TextRenderer.printText(attackingEnemy.getName() + " attacks and deals " +
-                (currentPlayerHealth - player.getStats().getCurrentHealth()) +
+                (currentPlayerHealth - Game.getPlayer().getStats().getCurrentHealth()) +
                 Color.getColor("red") + " damage" + Color.resetColor() + ".");
         attackingEnemy.getStats().useSpeed(2);
 
@@ -99,21 +93,19 @@ public class CombatManager {
     }
 
     public static void useItem(int index) {
-        Player player = ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername());
-
-        if(index < 1 || index > player.getInventory().getItems().size()){
+        if(index < 1 || index > Game.getPlayer().getInventory().getItems().size()){
             TextRenderer.printText(Color.getColor("red") + "There is no such item!" + Color.resetColor());
             return;
         }
 
-        if(player.getInventory().getItem(index).getClass() == EquipItem.class){
+        if(Game.getPlayer().getInventory().getItem(index).getClass() == EquipItem.class){
             TextRenderer.printText(Color.getColor("red") +
                     "You cannot use equip items during combat!" + Color.resetColor());
             return;
         }
 
-        player.getInventory().useItem(index);
-        player.getStats().useSpeed(1);
+        Game.getPlayer().getInventory().useItem(index);
+        Game.getPlayer().getStats().useSpeed(1);
         checkForTurnEnd();
     }
 
@@ -127,14 +119,14 @@ public class CombatManager {
             return;
         }
 
-        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().increaseStats(temporaryStatBonuses, -1);
+        Game.getPlayer().getStats().increaseStats(temporaryStatBonuses, -1);
         temporaryStatBonuses = new Stats();
         TextRenderer.printText("Temporary stats fade...");
         statsChanged = false;
     }
 
     private static void onTurnEnd(){
-        ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().refillSpeed();
+        Game.getPlayer().getStats().refillSpeed();
         for(Enemy enemy : enemies) {
             enemy.getStats().refillSpeed();
         }
@@ -143,7 +135,7 @@ public class CombatManager {
 
     public static boolean playerTurn() {
         try {
-            return ClientApplication.getClientInstance().getLobbyData().getPlayerData(ClientApplication.getClientInstance().getPlayerUsername()).getStats().getCurrentSpeed() > getFastestEnemy().getStats().getCurrentSpeed();
+            return Game.getPlayer().getStats().getCurrentSpeed() > getFastestEnemy().getStats().getCurrentSpeed();
         } catch (NullPointerException ignored){
             return false;
         }
