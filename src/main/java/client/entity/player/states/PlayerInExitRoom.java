@@ -34,6 +34,7 @@ public class PlayerInExitRoom extends PlayerWandering{
         }
         else {
             Game.generateOfflineDungeon(Game.getDungeon().getDungeonStats());
+            Game.getPlayer().setCurrentRoom(Game.getDungeon().getStartingRoom());
         }
         return true;
     }
