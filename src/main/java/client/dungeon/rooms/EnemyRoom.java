@@ -74,8 +74,4 @@ public class EnemyRoom extends DungeonRoom {
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
-
-    public void setEnemies(ArrayList<Enemy> enemies) {
-        this.enemies = enemies;
-    }
 }

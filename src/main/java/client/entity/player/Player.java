@@ -88,8 +88,7 @@ public class Player extends Entity {
         currentState = currentRoom.getRoomState();
         currentRoom.setExplored(true);
 
-        if(this == Game.getPlayer()){
-            System.out.println(currentRoom.getPosition().toString());
+        if(this == Game.getPlayer()) {
             currentRoom.onRoomEntered();
         }
     }

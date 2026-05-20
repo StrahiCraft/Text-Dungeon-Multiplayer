@@ -28,7 +28,7 @@ public class PlayerInExitRoom extends PlayerWandering{
         if(Game.isConnectedToServer()){
             ClientApplication.getClientInstance().getLobbyData().setDungeonData(DungeonGenerator.generateDungeon(Game.getDungeon().getDungeonStats()));
             ClientApplication.getClientInstance().getLobbyData().progressPlayersToNextFloor();
-            ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY);
+            ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
         }
         else {
             Game.generateOfflineDungeon(Game.getDungeon().getDungeonStats());

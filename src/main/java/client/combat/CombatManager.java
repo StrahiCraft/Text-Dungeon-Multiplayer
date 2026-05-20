@@ -156,10 +156,6 @@ public class CombatManager {
         return fastestEnemy;
     }
 
-    public static ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
-
     public static void setEnemies(ArrayList<Enemy> enemies) {
         CombatManager.enemies = enemies;
         goldReward = (int)(Game.getDungeon().getDungeonStats().getCurrentThreat() * enemies.size() * 5f);
@@ -171,30 +167,6 @@ public class CombatManager {
 
     public static void setInCombat(boolean inCombat) {
         CombatManager.inCombat = inCombat;
-    }
-
-    public static int getGoldReward() {
-        return goldReward;
-    }
-
-    public static void setGoldReward(int goldReward) {
-        CombatManager.goldReward = goldReward;
-    }
-
-    public static Stats getTemporaryStatBonuses() {
-        return temporaryStatBonuses;
-    }
-
-    public static void setTemporaryStatBonuses(Stats temporaryStatBonuses) {
-        CombatManager.temporaryStatBonuses = temporaryStatBonuses;
-    }
-
-    public static boolean isStatsChanged() {
-        return statsChanged;
-    }
-
-    public static void setStatsChanged(boolean statsChanged) {
-        CombatManager.statsChanged = statsChanged;
     }
 
     public static String asString() {
