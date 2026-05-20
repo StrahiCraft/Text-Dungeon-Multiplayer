@@ -69,8 +69,8 @@ public class Game extends Thread {
 
     public static void generateOfflineDungeon(DungeonStats stats){
         if(!connectedToServer){
-            offlineDungeon = new Dungeon(stats);
-            offlineDungeon = DungeonGenerator.generateDungeon();
+            offlineDungeon = DungeonGenerator.generateDungeon(stats);
+            Game.getPlayer().setCurrentRoom(offlineDungeon.getStartingRoom());
         }
     }
 

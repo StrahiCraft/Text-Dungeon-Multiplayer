@@ -3,7 +3,6 @@ package client.dungeon;
 import client.dungeon.rooms.DungeonRoom;
 import client.dungeon.utility.DungeonBounds;
 import client.dungeon.utility.DungeonStats;
-import client.entity.player.Player;
 import client.game.ClientApplication;
 import client.game.Game;
 import client_server_communication.ServerMessageType;
@@ -63,7 +62,9 @@ public class Dungeon implements Serializable {
             ClientApplication.getClientInstance().sendMessage(ServerMessageType.UPDATE_LOBBY, ClientApplication.getClientInstance().getLobbyData());
         }
         else {
-            Game.getPlayer().setCurrentRoom(newRoom);
+            if(Game.getPlayer().getCurrentRoom().getPosition().equalValue(newRoom.getPosition())){
+                Game.getPlayer().setCurrentRoom(newRoom);
+            }
         }
     }
 

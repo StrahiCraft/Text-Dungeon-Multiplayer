@@ -19,7 +19,6 @@ public class DungeonGenerator {
     }
 
     public static Dungeon generateDungeon(Dungeon dungeon){
-
         dungeon.setDungeonRooms(new Hashtable<>());
 
         generateEmptyDungeon(dungeon);

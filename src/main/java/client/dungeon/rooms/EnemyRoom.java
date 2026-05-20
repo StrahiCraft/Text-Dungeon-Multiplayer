@@ -12,7 +12,6 @@ import utility.Vector2Int;
 import java.util.ArrayList;
 
 public class EnemyRoom extends DungeonRoom {
-
     private ArrayList<Enemy> enemies;
 
     public EnemyRoom() {
